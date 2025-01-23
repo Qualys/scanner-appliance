@@ -1,63 +1,29 @@
 locals {
-  isGlobalMktImage    = contains(["global_marketplace"], var.ami) ? 1 : 0
-  vpc_name            = var.vpc_name
-  subnet_name         = var.virtual_subnet_name
-  selected_ami        = local.isGlobalMktImage == 1 ? data.aws_ami.global_marketplace_ami[0].id : var.ami
-  security_group      = var.default_security_group ? aws_security_group.default_security_group[0].id : data.aws_security_group.existing[0].id
-  security_group_name = var.default_security_group ? "default_security_group" : var.security_group
-  templates           = [for i in range(var.vm_count) : file("./userdata/userdata_${i}.txt")]
-  proxy_port          = regex(":(\\d+)$", var.proxy_url)[0]
-  is_proxy_defined    = length(var.proxy_url) > 0
+  isGlobalMktImage = contains(["global_marketplace"], var.ami) ? 1 : 0
+  vpc_id           = var.vpc_id
+  subnet_id        = var.virtual_subnet_id
+  selected_ami     = local.isGlobalMktImage == 1 ? data.aws_ami.global_marketplace_ami[0].id : var.ami
+  templates        = [for i in range(var.vm_count) : file("./userdata/userdata_${i}.txt")]
 }
 
 data "aws_vpc" "existing_vpc" {
   filter {
-    name   = "tag:Name"
-    values = [local.vpc_name]
+    name   = "vpc-id"
+    values = [local.vpc_id]
   }
 }
 
 data "aws_subnet" "existing_subnet" {
   filter {
-    name   = "tag:Name"
-    values = [local.subnet_name]
-  }
-}
-
-resource "aws_security_group" "default_security_group" {
-  count  = var.default_security_group ? 1 : 0
-  name   = local.security_group_name
-  vpc_id = data.aws_vpc.existing_vpc.id
-  # Ingress rules: Allow inbound traffic only if a proxy is defined
-  dynamic "ingress" {
-    for_each = local.is_proxy_defined ? [1] : []
-    content {
-      from_port        = tonumber(local.proxy_port)
-      to_port          = tonumber(local.proxy_port)
-      protocol         = "tcp"
-      cidr_blocks      = [var.proxy_cidr_block]
-      ipv6_cidr_blocks = [var.proxy_ipv6_cidr_blocks]
-    }
-  }
-  # Egress rules: Allow only HTTPS (port 443)
-  egress {
-    from_port        = 443
-    to_port          = 443
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-
-  }
-  tags = {
-    Name = local.security_group_name
+    name   = "subnet-id"
+    values = [local.subnet_id]
   }
 }
 
 data "aws_security_group" "existing" {
-  count = var.default_security_group ? 0 : 1
   filter {
-    name   = "tag:Name"
-    values = [local.security_group_name]
+    name   = "group-id"
+    values = [var.security_group_id]
   }
 }
 
@@ -79,7 +45,7 @@ resource "aws_instance" "vm_instance_ignore_ami_change" {
   monitoring                  = true
   ipv6_address_count          = var.assign_ipv6_public_ip ? 1 : 0
   associate_public_ip_address = var.assign_public_ip ? true : false
-  vpc_security_group_ids      = [local.security_group]
+  vpc_security_group_ids      = [data.aws_security_group.existing.id]
   lifecycle {
     ignore_changes = [ami, ]
   }
@@ -97,7 +63,7 @@ resource "aws_instance" "vm_instance" {
   monitoring                  = true
   ipv6_address_count          = var.assign_ipv6_public_ip ? 1 : 0
   associate_public_ip_address = var.assign_public_ip ? true : false
-  vpc_security_group_ids      = [local.security_group]
+  vpc_security_group_ids      = [data.aws_security_group.existing.id]
   tags = {
     Name = "${var.scanner_name}-${count.index}"
   }

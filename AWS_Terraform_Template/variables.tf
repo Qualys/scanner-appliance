@@ -37,7 +37,7 @@ Learn more: https://aws.amazon.com/ec2/instance-types/
 EOT
 }
 
-variable "vpc_name" {
+variable "vpc_id" {
   type        = string
   description = <<EOT
 Input: Name of the VPC
@@ -45,7 +45,7 @@ Learn more: https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.
 EOT
 }
 
-variable "virtual_subnet_name" {
+variable "virtual_subnet_id" {
   type        = string
   description = <<EOT
 Input: Name of the virtual subnet
@@ -63,7 +63,7 @@ Description: Provide a local AMI ID or 'global_marketplace' for latest marketpla
 EOT
 }
 
-variable "security_group" {
+variable "security_group_id" {
   type        = string
   description = <<EOT
 Input: Name of an existing security group
@@ -100,12 +100,6 @@ variable "vm_count" {
   default     = 1
 }
 
-variable "default_security_group" {
-  type        = bool
-  description = "Whether to use the default security group."
-  default     = true
-}
-
 variable "instance_state" {
   type        = string
   description = "Desired state of the instance (e.g., 'running')."
@@ -122,15 +116,4 @@ variable "assign_ipv6_public_ip" {
   type        = bool
   description = "Whether to assign an IPv6 address to the VM."
   default     = false
-}
-
-variable "proxy_cidr_block" {
-  description = "CIDR block for the proxy"
-  type        = string
-  default     = "0.0.0.0/0"
-}
-variable "proxy_ipv6_cidr_blocks" {
-  description = "IPv6 CIDR block for the proxy"
-  type        = string
-  default     = "::/0"
 }

@@ -54,30 +54,6 @@ variable "boot_diagnostics" {
   default     = true
 }
 
-variable "is_default_sg" {
-  description = "Enable or disable the default security group."
-  type        = bool
-  default     = true
-}
-
-variable "virtual_network_new_or_existing" {
-  type        = string
-  description = <<EOD
-Specify the virtual network for the Scanner VM:
-- 'new' for a new virtual network
-- 'existing' to use existing virtual network
-EOD
-}
-
-variable "virtual_resource_group_new_or_existing" {
-  type        = string
-  description = <<EOD
-Specify the virtual network for the Scanner VM:
-- 'new' for a new virtual resource group
-- 'existing' to use existing resource group
-EOD
-}
-
 variable "resource_group_name" {
   type        = string
   description = "Name of the Azure resource group."
@@ -100,30 +76,6 @@ variable "security_group_name" {
   type        = string
   description = "Name of the security group."
   default     = ""
-}
-
-variable "new_virtual_network" {
-  description = "Configuration for the new virtual network."
-  type = object({
-    name          = string
-    address_space = list(string)
-  })
-  default = {
-    name          = "default_vnet"
-    address_space = ["10.0.0.0/24", "fd00:db8:deca::/64"]
-  }
-}
-
-variable "new_subnet" {
-  description = "Configuration for the new subnet."
-  type = object({
-    name             = string
-    address_prefixes = list(string)
-  })
-  default = {
-    name             = "default_subnet"
-    address_prefixes = ["10.0.0.0/24", "fd00:db8:deca::/64"]
-  }
 }
 
 variable "storage_account_name" {
