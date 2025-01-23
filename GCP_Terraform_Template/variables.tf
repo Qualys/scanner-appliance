@@ -39,16 +39,6 @@ variable "key_file_path" {
   description = "Specifies the file path for the service account key.\nMore info: https://cloud.google.com/iam/docs/keys-create-delete."
 }
 
-variable "virtual_network_new_or_existing" {
-  type        = string
-  description = "Defines whether to create a new virtual network or use an existing one. Provide 'new' for a new network or 'existing' for existing network."
-}
-
-variable "virtual_subnet_new_or_existing" {
-  type        = string
-  description = "Defines whether to create a new subnet or use an existing one. Provide 'new' for a new subnet or 'existing' for an existing subnet."
-}
-
 variable "virtual_network_name" {
   type        = string
   description = "Specifies the name of the virtual network."
@@ -59,12 +49,6 @@ variable "virtual_subnet_name" {
   type        = string
   description = "Specifies the name of the virtual subnet."
   default     = "default-subnet"
-}
-
-variable "subnet_cidr" {
-  type        = string
-  description = "Defines the CIDR range for the subnet. Default is 10.0.0.0/24."
-  default     = "10.0.0.0/24"
 }
 
 variable "image_uri" {
@@ -106,12 +90,6 @@ variable "assign_ipv6_ip" {
   default     = false
 }
 
-variable "default_firewall_rule" {
-  description = "Determines whether to use the default firewall rules or an existing rule."
-  type        = bool
-  default     = true
-}
-
 variable "desired_status" {
   description = "Specifies the desired operational status of the VM instances (e.g., RUNNING or TERMINATED)."
   type        = string
@@ -128,15 +106,4 @@ variable "stack_type" {
   description = "Specifies the IP stack type for the VM instances (e.g., IPV4_ONLY or IPV4_IPV6)."
   type        = string
   default     = "IPV4_ONLY"
-}
-
-variable "proxy_cidr_block" {
-  description = "CIDR block for the proxy"
-  type        = string
-  default     = "0.0.0.0/0"
-}
-variable "proxy_ipv6_cidr_blocks" {
-  description = "IPV6 CIDR block for the proxy"
-  type        = string
-  default     = "::/0"
 }
