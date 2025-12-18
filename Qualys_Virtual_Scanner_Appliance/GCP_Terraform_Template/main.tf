@@ -33,6 +33,11 @@ resource "google_compute_instance" "vm_instance" {
       image = local.selected_image
     }
   }
+  shielded_instance_config {
+    enable_secure_boot          = var.enable_secure_boot
+    enable_vtpm                 = var.enable_vtpm
+    enable_integrity_monitoring = var.enable_integrity_monitoring
+  }
 
   network_interface {
     network    = data.google_compute_network.existing_network.self_link
@@ -53,4 +58,11 @@ resource "google_compute_instance" "vm_instance" {
   }
   metadata       = jsondecode(local.templates[count.index])
   desired_status = var.desired_status
+}
+
+resource "null_resource" "userdata_cleanup" {
+  provisioner "local-exec" {
+    when    = destroy
+    command = "rm -rf userdata"
+  }
 }

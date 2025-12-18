@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check if required environment variables are set
-for var in QUALYSGUARD_LOGIN QUALYSGUARD_PASSWORD ARM_SUBSCRIPTION_ID ARM_SUBSCRIPTION_ID ARM_CLIENT_ID ARM_CLIENT_SECRET;  do
+for var in QUALYSGUARD_LOGIN QUALYSGUARD_PASSWORD ARM_SUBSCRIPTION_ID ARM_TENANT_ID ARM_CLIENT_ID ARM_CLIENT_SECRET;  do
   [ -z "${!var}" ] && echo "Error: $var is missing." && exit 1
 done
 

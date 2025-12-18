@@ -35,7 +35,13 @@ variable "availability_domain" {
 
 variable "image_ocid" {
   type        = string
-  description = "The OCID of the image to use for the instance"
+  description = <<EOD
+Specify one of the following:
+- (input_1) qVSA image ID
+- (input_2) 'global_marketplace' 
+
+This value represents the qVSA image, either in the form of an image ID, or the string 'global_marketplace'. Provide 'global_marketplace' to use latest marketplace image.
+EOD
 }
 
 variable "shape" {
@@ -61,14 +67,21 @@ variable "vm_count" {
 
 variable "memory_in_gbs" {
   type = number
-  description = "If a flexible shape (e.g., VM.Standard.E5.Flex) is selected, memory_in_gbs will be explicitly allocated to the scanner; otherwise, the shape's default memory will be used."
+  description = <<EOT
+  If a flexible shape (e.g., VM.Standard.E5.Flex) is selected, memory_in_gbs will be explicitly allocated to the scanner; otherwise, the shape's default memory will be used.
+  Note: Recommended OCPU-to-memory ratio is 1:4 (SMT enabled) or 1:2 (SMT disabled)
+  EOT
   default = 4
 }
 
 variable "ocpus" {
   type = number
-  description = "If a flexible shape (e.g., VM.Standard.E5.Flex) is selected, ocpus number of ocpus will be explicitly allocated to the scanner; otherwise, the shape's default ocpus will be used."
-  default = 1
+  description = <<EOT
+Specifies the number of Oracle CPUs (OCPUs) to allocate for the scanner.
+With SMT enabled, 1 OCPU provides 2 vCPUs; with SMT disabled, 1 OCPU provides 1 vCPU.
+Note: Recommended OCPU-to-memory ratio is 1:4 (SMT enabled) or 1:2 (SMT disabled).
+EOT
+  default = 2
 }
 
 variable "assign_public_ip" {
@@ -85,7 +98,7 @@ variable "assign_ipv6_public_ip" {
 
 variable "friendly_name" {
   type        = string
-  description = "Friendly name for the scanner."
+  description = "Friendly name for the scanner to be created in qweb (max 19 chars)."
 }
 
 variable "qualysguard_url" {
@@ -109,10 +122,11 @@ variable "enable_smt" {
   type = bool
   description = <<EOT
 Controls whether Simultaneous Multithreading (SMT) is enabled on the instance.
-- true: SMT is enabled — each core runs multiple threads (e.g., 2 threads per core).
-- false: SMT is disabled — each core runs a single thread.
+- true: SMT is enabled — each OCPU gives 2 vCPUs.
+- false: SMT is disabled — each OCPU gives 1 vCPU.
+Note: Recommended setting is SMT = false.
 EOT
-  default = true
+  default = false
 }
 
 variable "legacy_imds_endpoints_disabled" {

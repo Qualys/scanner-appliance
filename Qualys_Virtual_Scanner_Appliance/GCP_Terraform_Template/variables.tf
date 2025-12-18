@@ -107,3 +107,21 @@ variable "stack_type" {
   type        = string
   default     = "IPV4_ONLY"
 }
+
+variable "enable_secure_boot" {
+  description = "Determines whether to enable secure boot or not"
+  type        = bool
+  default     = true
+}
+
+variable "enable_vtpm" {
+  description = "Determines whether to enable vtpm or not"
+  type        = bool
+  default     = true
+}
+
+variable "enable_integrity_monitoring" {
+  description = "Determines whether to enable integrity monitoring"
+  type        = bool
+  default     = true
+}

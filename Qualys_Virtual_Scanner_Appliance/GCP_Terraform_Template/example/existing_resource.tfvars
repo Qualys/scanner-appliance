@@ -27,6 +27,9 @@ desired_status = "RUNNING" # Desired status of the VM (RUNNING or STOPPED)
 network_tier   = "PREMIUM"
 
 # External URLs and Authentication
-friendly_name   = "qvsa"                                 # Friendly name for the scanner to be created in qweb
-qualysguard_url = "qualysguard.qualys.com"               # URL for QualysGuard platform   
-proxy_url       = "user:password@proxy.example.com:8080" # Proxy URL for the scanner
+friendly_name               = "qvsa"                                 # Friendly name for the scanner to be created in qweb
+qualysguard_url             = "qualysguard.qualys.com"               # URL for QualysGuard platform   
+proxy_url                   = "user:password@proxy.example.com:8080" # Proxy URL for the scanner
+enable_secure_boot          = true
+enable_vtpm                 = true
+enable_integrity_monitoring = true

@@ -161,3 +161,10 @@ resource "null_resource" "stop_vm" {
   }
   depends_on = [azurerm_linux_virtual_machine.scanner_vm]
 }
+
+resource "null_resource" "userdata_cleanup" {
+  provisioner "local-exec" {
+    when    = destroy
+    command = "rm -rf userdata"
+  }
+}

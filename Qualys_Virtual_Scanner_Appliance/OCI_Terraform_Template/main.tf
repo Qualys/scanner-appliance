@@ -13,14 +13,36 @@ locals {
       if subnet.id == var.subnet_id
   ]) > 0 ? var.subnet_id : ""
 
-  existing_image_id = length([
-    for img in data.oci_core_images.all_images.images :
-    img.id
-    if img.id == var.image_ocid
-  ]) > 0 ? var.image_ocid : ""
-
+  image_id = contains(["global_marketplace"], var.image_ocid) ? data.oci_core_app_catalog_listing_resource_version.qualys_catalog_listing.listing_resource_id : var.image_ocid
 }
 
+
+data "oci_marketplace_listing_package_agreements" "qualys_listing_package_agreements" {
+  listing_id      = data.oci_marketplace_listing.qualys_listing.id
+  package_version = data.oci_marketplace_listing.qualys_listing.default_package_version
+  compartment_id = var.compartment_ocid
+}
+
+data "oci_marketplace_listing_package" "qualys_listing_package" {
+  listing_id      = data.oci_marketplace_listing.qualys_listing.id
+  package_version = data.oci_marketplace_listing.qualys_listing.default_package_version
+  compartment_id = var.compartment_ocid
+}
+
+data "oci_marketplace_listing" "qualys_listing" {
+  listing_id     = data.oci_marketplace_listings.qualys_listings.listings[0].id
+  compartment_id = var.compartment_ocid
+}
+
+data "oci_marketplace_listings" "qualys_listings" {
+  name = ["Qualys Virtual Scanner Appliance"]
+  compartment_id = var.compartment_ocid
+}
+
+data "oci_core_app_catalog_listing_resource_version" "qualys_catalog_listing" {
+  listing_id = data.oci_marketplace_listing_package.qualys_listing_package.app_catalog_listing_id
+  resource_version = data.oci_marketplace_listing_package.qualys_listing_package.app_catalog_listing_resource_version
+}
 
 data "oci_core_subnets" "all_subnets" {
   compartment_id = var.compartment_ocid
@@ -34,6 +56,21 @@ data "oci_core_images" "all_images" {
   compartment_id = var.compartment_ocid
 }
 
+
+
+resource "oci_marketplace_accepted_agreement" "qualys_accepted_agreement" {
+  agreement_id    = oci_marketplace_listing_package_agreement.qualys_listing_package_agreement.agreement_id
+  compartment_id  = var.compartment_ocid
+  listing_id      = data.oci_marketplace_listing.qualys_listing.id
+  package_version = data.oci_marketplace_listing.qualys_listing.default_package_version
+  signature       = oci_marketplace_listing_package_agreement.qualys_listing_package_agreement.signature
+}
+
+resource "oci_marketplace_listing_package_agreement" "qualys_listing_package_agreement" {
+  agreement_id    = data.oci_marketplace_listing_package_agreements.qualys_listing_package_agreements.agreements[0].id
+  listing_id      = data.oci_marketplace_listing.qualys_listing.id
+  package_version = data.oci_marketplace_listing.qualys_listing.default_package_version
+}
 
 resource "oci_core_instance" "vm_instance" {
   count = var.vm_count
@@ -70,7 +107,7 @@ resource "oci_core_instance" "vm_instance" {
 
   source_details {
     source_type = "image"
-    source_id   = local.existing_image_id
+    source_id   = local.image_id
   }
 }
 
