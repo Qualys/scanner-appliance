@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scanner Capacity Calculator</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACkAAAAvCAYAAAB+OePrAAAACXBIWXMAAAsSAAALEgHS3X78AAAE1ElEQVRYw72Zb2gbZRzHvxfzZ10S2h1FlIrmxaAW5BbXgVClDRPG1GIrKJP5wrCNTQbWVHwhKYxaaIcwbMgLsUFrKlPW+WKZhFnHdM3YSoRW2xO5DAa24lBkxGZt2uZf44tdNMk9z91zl6Q/KEmT5/fcJ8/9/h9XLBZhRJJChwuAC4BHY+ksgFVelBZhUDhWyKTQ4ZaB+gH0GLxeTIaO6IFWhUwKHS0AvAB8AJ5AfWUFQBhAgBelVd2QMpxP/mtG42UKgI8Gq4BMCh0+AMM7BFcuKQDDvCgFqJDy6UWM2hvXaoP5KRcAoPDH39i+8w9qsFsvL0rLFZCyU0T02B3XaoOt7yCszx6C+cBh4pr8/Ayyt64iG4vrhU4B8JScqwQZBvAmK5z93dOw9p7UdTzZaAgbk2E9sDFelDwAYJI/cLFoWXv3o+XyD7oBH+ieRPNUFLYj3bp1TawLbUe64Rj7EpyTN+wZnJOHfWgCdv9xluXu0huz/NqiBWgfmlDdMT8/U/E/zU4BwPb6ewCA9Nhnals2VzsONaJbPO1wBiPE77bvJrAZHkf2+x9RvJch/rgm7yBMbU8S9df9byAb/YlKyYsSxwTZ8u0l4kWy0RDSH31MhKuW3QOvYdeJEcXnxbUkVvsOUvcoQZq0NqcBrvvHmQABYCP4NdKjp4g22nT05docx/rCUaLtrfvHdTtNZvoGMhfOEUzCB67VZgzS4mknnuL62Ihh794InUdxLak4TevzzxiEFATiba4h3aF4L4PMdEB5rX2dxiDN7i4l5Fys5ipi68o1JcQjj9cnmANALv5rzZCkO6EWU9VPkqDI6s1aUh34Wb07RQrUjRLToy5DkIp+Y/vP5YYAcq02RdTQOhDq7S6up4hhqVYhhRvKgaxoQhbuKJ3E2vVczZBN3kFl1Lh1lbR0uRpyVqk4p4R86ZhmdjCUZmNxJkiFTeYX7ipshTXX0jIYqcjIz8/QEsSi5kkCwGZYmaN3nRjRbZvmzjY4RieJ321+8QlNLVIBKfe7l0lFAcnzHKOTMHe2MVf0zuBFYkWfuXAOudnbJLWl8m7RRCIvl/SH7xNLLGfwoma/Yvcfh31ogghYSMSxETpPUw0TQxAvSuFyt/8vFc7extanZ6j9ijM4DNPePeQOce4mstGQovIpJOK4f/otWgZLVUNWTDCSQocXwOckTcfYoGqXqNWymjvbwDkdsAgCNr/6Ri3FfsCL0rDWmGURwD4joCVvzXx3CbmFX4yUdSsA3NUzIRKkB8B1NUfYPXCWqbUtJOLIL95ETvwZ+cRvLNCv8KIUYZ2qBQC8Q82le/fA4T+jWWLRTnr7r99JLcgUL0pe5tzNi5IPwJJaTXj/2CDWBvp1l13mA4eRW1pQhBx5zMg+nyybsi2zjAAtnnbYDr0IS8+rmmaQHj2FzPQN6nBKF6QM6pazEfOs0tq7H9auHpif7q7I08W1JNJn364eBmgCakIaBS233YceexgWQcDWlWvVjsMEyARZKyjL/LEuUzV5Mw8pIzUaUFe3KG/qVvN6BlmSg7WuZzqckYdNWnGUIqpPGOoOKYP2y4VAM8Pt9ckFjLHmzShkWSwNA+ijLFE8SdhxyKp8H8b/Ty9W5NOL1KUNrgdkGawPD0bbASO2tyOQjZJ/AcYGMzoN0IjnAAAAAElFTkSuQmCC">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', system-ui, sans-serif; }
+    .result-card {
+      transition: all 0.2s ease;
+    }
+    .slider-thumb::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #dc2626;
+      cursor: pointer;
+    }
+    .slider-thumb::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #dc2626;
+      cursor: pointer;
+      border: none;
+    }
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: #fee2e2;
+      outline: none;
+      width: 100%;
+    }
+    .hidden-field { display: none !important; }
+    .fade-in { animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .help-modal { transition: opacity 0.2s ease, visibility 0.2s ease; }
+    .help-panel { transition: transform 0.25s cubic-bezier(0.4,0,0.2,1); }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+      background-position: right 0.5rem center;
+      background-repeat: no-repeat;
+      background-size: 1.2em;
+      padding-right: 2rem;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-50 to-red-50">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center gap-4">
+      <div class="flex items-center gap-4">
+        <img src="product.png" alt="Qualys" style="height:36px;width:auto" />
+        <div class="h-7 w-px bg-gray-200"></div>
+        <div>
+          <h1 class="text-base font-bold text-gray-900 leading-tight">Scanner Capacity Calculator</h1>
+          <p class="text-xs text-gray-400 mt-0.5">v1.2</p>
+        </div>
+      </div>
+      <div class="ml-auto flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-medium px-3 py-1 rounded-full">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          Ballpark estimates only — actual results vary by environment
+        </span>
+        <button onclick="openHelp()" title="How to use this tool"
+          class="w-8 h-8 rounded-full bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition text-sm font-bold">
+          ?
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Help Modal ── -->
+  <div id="help-modal" class="help-modal fixed inset-0 z-50 flex justify-end opacity-0 invisible" onclick="closeHelpIfBackdrop(event)">
+    <div class="absolute inset-0 bg-black/40"></div>
+    <div id="help-panel" class="help-panel relative z-10 w-full max-w-lg bg-white h-full shadow-2xl overflow-y-auto transform translate-x-full">
+      <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10">
+        <div>
+          <h2 class="text-base font-bold text-gray-900">How to Use This Tool</h2>
+          <p class="text-xs text-gray-400 mt-0.5">Field reference &amp; formula guide</p>
+        </div>
+        <button onclick="closeHelp()" class="w-8 h-8 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center hover:bg-gray-200 transition text-lg leading-none">&times;</button>
+      </div>
+
+      <div class="px-6 py-5 space-y-7 text-sm text-gray-700">
+
+        <!-- Overview -->
+        <div>
+          <h3 class="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+            <span class="w-5 h-5 bg-red-100 rounded flex items-center justify-center text-xs text-red-600">&#9432;</span>
+            Overview
+          </h3>
+          <p class="text-gray-600 leading-relaxed">This tool does two things:</p>
+          <ul class="text-gray-600 text-sm mt-2 space-y-1 list-disc list-inside leading-relaxed">
+            <li><strong>Scanner sizing</strong> — estimates how many Qualys scanner appliances you need to scan a given set of targets in one parallel pass, with a parallelism tradeoff table showing speed vs. resource options.</li>
+            <li><strong>Scan Time Planner</strong> — given a time window (e.g. 10h overnight) or an existing scanner pool, shows which scanner spec and count will meet your goal, and how long your current setup will actually take.</li>
+          </ul>
+        </div>
+
+        <!-- Scan Target Info -->
+        <div>
+          <h3 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <span class="w-5 h-5 bg-red-100 rounded flex items-center justify-center">
+              <svg class="w-3 h-3 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+            </span>
+            Scan Configurations
+          </h3>
+          <div class="space-y-3">
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="font-medium text-gray-800 mb-1">Scan Type</p>
+              <ul class="space-y-1 text-gray-600 text-xs">
+                <li><span class="font-semibold">VM</span> — Vulnerability Management host scan. Uses target IP count.</li>
+                <li><span class="font-semibold">PC</span> — Policy Compliance scan. Uses target IP count. Higher scan cost per slice than VM.</li>
+                <li><span class="font-semibold">PCI</span> — PCI DSS compliance scan. Uses target IP count. Same slice cost as VM but significantly longer per-burst time (~60–120 min vs 5–10 min for VM/PC).</li>
+                <li><span class="font-semibold">MAP</span> — Discovery / network mapping scan. Uses job count instead of IPs.</li>
+                <li><span class="font-semibold">WAS</span> — Web Application Scanning. Uses job count. Fixed capacity constants apply.</li>
+              </ul>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="font-medium text-gray-800 mb-1">Alive IPs to Scan in Parallel <span class="text-xs font-normal text-gray-400">(VM / PC / PCI)</span></p>
+              <p class="text-gray-600 text-xs">These are the alive IPs that will be scanned in parallel. Obtain from a MAP scan or a network ping sweep.</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="font-medium text-gray-800 mb-1">Number of Scan Jobs <span class="text-xs font-normal text-gray-400">(MAP / WAS only)</span></p>
+              <p class="text-gray-600 text-xs">One job per scan target (web app or network segment). Each job is dispatched independently to the scanner.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scanner Appliance Config -->
+        <div>
+          <h3 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <span class="w-5 h-5 bg-purple-100 rounded flex items-center justify-center">
+              <svg class="w-3 h-3 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/></svg>
+            </span>
+            Scanner Appliance Configuration
+          </h3>
+          <div class="space-y-3">
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="font-medium text-gray-800 mb-1">Scanner Type</p>
+              <ul class="space-y-1 text-gray-600 text-xs">
+                <li><span class="font-semibold">Virtual / Container (Internal)</span> — VM-hosted internal scanner. A <strong>40% virtual penalty</strong> (×3/5) is applied to the estimated capacity, on top of the <strong>40% Hyperthreading / SMT penalty</strong> when HT is enabled.</li>
+                <li><span class="font-semibold">Virtual Perimeter</span> — VM-hosted perimeter scanner, no hypervisor penalty.</li>
+                <li><span class="font-semibold">Physical 6120-B1 (NVXE)</span> — Fixed hardware appliance, <strong>1,245 units</strong>.</li>
+                <li><span class="font-semibold">Physical 6120-A1 (NVX)</span> — Fixed hardware appliance, <strong>1,040 units</strong>.</li>
+              </ul>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 border-l-2 border-red-400">
+              <p class="font-medium text-gray-800 mb-1">Base CPU Speed (MHz)</p>
+              <p class="text-gray-600 text-xs">Clock speed of a single CPU core as seen by the scanner. Typical range: <strong>2500–2900 MHz</strong>. Default: <strong>2600 MHz</strong>. Key inputs used in capacity estimation: <strong>CPU count</strong>, <strong>CPU speed (MHz)</strong>, and <strong>available RAM</strong>. CPU speed is often the bottleneck. It can be read from the VM's CPU spec in your virtualization platform (VMware, AWS, Azure, Oracle Cloud, etc.) — <em>without needing to deploy or boot the scanner VM</em> — and is also visible in the scanner's boot logs. Note: users have no direct control over CPU speed; it is determined by the underlying host hardware and hypervisor allocation.</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="font-medium text-gray-800 mb-1">Hyperthreading / SMT (HT)</p>
+              <p class="text-gray-600 text-xs">When enabled, a <strong>40% penalty</strong> (×3/5) is applied to the total effective CPU speed. HT (also known as SMT — Simultaneous Multi-Threading) is on by default for most VMs and is auto-detected by the scanner daemon at boot. The HT status can be found in the VM's CPU spec on your virtualization platform or in the scanner's boot logs — no scanner deployment needed to check it. Some platforms (e.g. <strong>VMware</strong>, <strong>Oracle Cloud</strong>) allow HT to be toggled per VM; others do not expose this control. Disable this only if confirmed <code>hyperthreading=0</code> in the scanner's boot logs or VM settings.</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="font-medium text-gray-800 mb-1">vScanner CPUs &amp; Memory <span class="text-xs font-normal text-gray-400">— CPU:RAM sizing</span></p>
+              <p class="text-gray-600 text-xs mb-2">Ideal ratio is <strong>1 vCPU : 2–3 GB RAM</strong> (max 1:4). Recommended tiers:</p>
+              <ul class="text-xs text-gray-600 space-y-0.5">
+                <li><span class="font-semibold">Min stable:</span> 2 vCPUs / 4 GB RAM</li>
+                <li><span class="font-semibold">Small–Medium:</span> 4 vCPUs / 8 GB RAM</li>
+                <li><span class="font-semibold">Enterprise:</span> 8 vCPUs / 16 GB RAM and above</li>
+              </ul>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 border-l-2 border-blue-400">
+              <p class="font-medium text-gray-800 mb-1">External Scanners to Use <span class="text-xs font-normal text-gray-400">— Perimeter type only</span></p>
+              <p class="text-gray-600 text-xs">The number of Virtual Perimeter scanners available in your pool (default: <strong>40</strong>). The Scan Time Planner uses this as a hard cap — the <em>Scanners for Goal</em> column will never suggest exceeding this count, and the “add scanners” recommendation will flag when reaching the goal would require more than your defined limit.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scan Performance Settings -->
+        <div>
+          <h3 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <span class="w-5 h-5 bg-green-100 rounded flex items-center justify-center">
+              <svg class="w-3 h-3 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </span>
+            Scan Performance Settings
+          </h3>
+          <div class="space-y-3">
+            <div class="bg-gray-50 rounded-lg p-3 border-l-2 border-green-400">
+              <p class="font-medium text-gray-800 mb-1">Parallel Host Scans per Scanner per Slice (P) <span class="text-xs text-green-600 font-semibold">&#9654; drives slice &amp; job math</span></p>
+              <p class="text-gray-600 text-xs">Set in the Scan Performance settings in your Option Profile. Range: 1–50. Recommended default: <strong>30</strong>. P defines how many target IPs are scanned concurrently within one slice. A scanner handles <strong>one slice per job at a time</strong> — to run more slices in parallel on the same scanner, split large jobs into multiple smaller jobs. Avoid extreme P values (e.g. 50) unless scanners are well-resourced and the network can handle it.</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="font-medium text-gray-800 mb-1">Parallel ML Scaling (ON / OFF)</p>
+              <p class="text-gray-600 text-xs">When <strong>ON</strong>, the Qualys ML engine spawns <strong>3&times;P</strong> parallel processes per scanner. Recommended: <strong>OFF</strong> by default. Enable only if your scanners are adequately sized and the environment is validated for high-parallelism loads. Match this setting to what is configured in your Option Profile.</p>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Jobs & Slices Concept -->
+        <div>
+          <h3 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <span class="w-5 h-5 bg-yellow-100 rounded flex items-center justify-center">
+              <svg class="w-3 h-3 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            </span>
+            Jobs, Slices &amp; Parallelism
+          </h3>
+          <div class="space-y-3">
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="font-medium text-gray-800 mb-1">What is a slice?</p>
+              <p class="text-gray-600 text-xs">A scan job is divided into one or more <strong>slices</strong>, each covering up to <strong>P</strong> target IPs. Total slices = ceil(Target IPs ÷ P). Each slice is dispatched to a scanner as a unit of work.</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 border-l-2 border-yellow-400">
+              <p class="font-medium text-gray-800 mb-1">One slice per job at a time</p>
+              <p class="text-gray-600 text-xs">A scanner is assigned <strong>one slice per job at a time</strong>. To run more slices in parallel on the same scanner, <strong>split large jobs into multiple smaller jobs</strong> — each job contributes one slice to the scanner simultaneously, increasing throughput without adding hardware.</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="font-medium text-gray-800 mb-1">Bursts</p>
+              <p class="text-gray-600 text-xs">A burst is one pass where all scanners process their assigned slices in parallel. Bursts needed = ceil(Total Slices ÷ (Scanners × Max Slices per Scanner)). When all slices fit in one burst, all target IPs are being scanned simultaneously.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Understanding Results -->
+        <div>
+          <h3 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <span class="w-5 h-5 bg-gray-100 rounded flex items-center justify-center">
+              <svg class="w-3 h-3 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            </span>
+            Understanding the Results
+          </h3>
+          <div class="space-y-3">
+            <div class="bg-gray-50 rounded-lg p-3 border-l-2 border-red-400">
+              <p class="font-medium text-gray-800 mb-1">Scanners Needed — Trade-off Table <span class="text-xs font-normal text-gray-400">(VM / PC / PCI)</span></p>
+              <p class="text-gray-600 text-xs mb-2">For VM/PC/PCI scans, the large blue card shows four strategies for completing the workload. Pick the row that fits your scan window.</p>
+              <ul class="text-gray-600 text-xs space-y-1">
+                <li><span class="font-semibold">⚡ Fastest</span> — full pool, completes in 1 burst. Maximum scanners, minimum duration.</li>
+                <li><span class="font-semibold">⚖ Balanced</span> — 75% of the pool, good middle ground.</li>
+                <li><span class="font-semibold">💰 Economical</span> — 50% of the pool, fewer scanners.</li>
+                <li><span class="font-semibold">🐢 Minimal pool</span> — 25% of the pool, lowest footprint, longest duration.</li>
+              </ul>
+              <p class="text-gray-600 text-xs mt-2">For MAP/WAS, a single scanner count is shown (jobs are dispatched 1-per-target).</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 border-l-2 border-amber-400">
+              <p class="font-medium text-gray-800 mb-1">Jobs to Create</p>
+              <p class="text-gray-600 text-xs">The minimum number of scan jobs to create to achieve a row's stated duration. Because a scanner runs <strong>one slice per job at a time</strong>, splitting your scan into more jobs lets each scanner work on more slices in parallel. The tool computes the smallest job count that still hits the row's round count — splitting further doesn't help that strategy. This value is also capped by the <strong>Concurrent Scans and Maps</strong> limit, since you can't run more jobs at once than that. Keep in mind that <strong>Jobs to Create</strong> is one of several levers — you may also need to adjust your <strong>scanner pool size</strong> or <strong>scanner specs</strong> (CPU / RAM) to meet your scan window.</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="font-medium text-gray-800 mb-1">Max Slices in Parallel / Scanner</p>
+              <p class="text-gray-600 text-xs">How many simultaneous slices (one per concurrent job) a single scanner can handle at once. Driven by scanner capacity, CPU speed, and ML Scaling setting — then capped by the <strong>Concurrent Scans and Maps</strong> limit (you can't run more jobs/slices than that across the pool).</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="font-medium text-gray-800 mb-1">Total Slices</p>
+              <p class="text-gray-600 text-xs">Total number of slices required to cover all target IPs = ceil(Target IPs ÷ P). This is the total unit of work to be distributed across the scanner pool.</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 border-l-2 border-gray-300">
+              <p class="font-medium text-gray-800 mb-1">Estimated Scan Duration</p>
+              <p class="text-gray-600 text-xs">Each row's duration ≈ bursts × avg time per burst (ballpark): <strong>~5–10 min for VM/PC</strong>, <strong>~60–120 min for PCI</strong>. Actual speed varies by: number of open ports, scan settings (port range, authenticated vs. non-authenticated), target network connectivity and response speed, and number of vulnerabilities to detect and process.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scanner Pool & Load Spreading -->
+        <div>
+          <h3 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <span class="w-5 h-5 bg-blue-100 rounded flex items-center justify-center">
+              <svg class="w-3 h-3 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+            </span>
+            Scanner Pool &amp; Load Best Practices
+          </h3>
+          <div class="space-y-3">
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="font-medium text-gray-800 mb-1">Spread the load</p>
+              <p class="text-gray-600 text-xs">The scanner count shown represents the minimum needed for <em>maximum parallelism in one pass</em>. For better cost-efficiency, spread jobs across multiple scan windows and reduce extreme parallelism settings. Fewer scanners running longer is often more sustainable than many scanners peaking simultaneously.</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 border-l-2 border-blue-400">
+              <p class="font-medium text-gray-800 mb-1">Keep your scanner pool uniformly sized</p>
+              <p class="text-gray-600 text-xs">All scanners in a pool should have the <strong>same vCPUs, RAM, and type</strong> (all virtual <em>or</em> all physical). Mixed-spec pools create uneven capacity, wasted slots, and unpredictable scan times — the weakest scanner becomes the bottleneck.</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 border-l-2 border-orange-400">
+              <p class="font-medium text-gray-800 mb-1">Disk — recommended 100 GB for large scans</p>
+              <p class="text-gray-600 text-xs">The default disk size works well for most small to medium scans. For large or frequent scans, provision at least <strong>100 GB</strong>. If you hit "disk full" errors, increase disk allocation. <strong>Disable the Debug Scan setting</strong> in the Qualys portal before scheduling scans — it dramatically inflates disk usage and can render a scanner unusable.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scan Time Planner -->
+        <div>
+          <h3 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <span class="w-5 h-5 bg-blue-100 rounded flex items-center justify-center">
+              <svg class="w-3 h-3 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </span>
+            Scan Time Planner
+          </h3>
+          <div class="space-y-3">
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="font-medium text-gray-800 mb-1">Overview</p>
+              <p class="text-gray-600 text-xs">The Scan Time Planner appears inside the main blue card when you enter a <strong>Desired Scan Duration</strong> or <strong>Scanner Pool Size</strong>. It shows a table across standard scanner specs plus your current config. Average scan times are predefined per scan type (VM/PC: ~7.5 min/round, WAS: ~10 min/job, PCI: ~60 min/round, MAP: ~25 min/job).</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 border-l-2 border-blue-400">
+              <p class="font-medium text-gray-800 mb-1">Desired Scan Duration</p>
+              <p class="text-gray-600 text-xs">How long you have to complete the scan — enter in <strong>hours</strong> or <strong>minutes</strong> using the toggle next to the input (e.g. 10 hrs for an overnight window, or 60 min for a short batch). Activates the <em>Scanners Needed</em> column, showing the minimum scanner count to meet your duration at each spec. Uses the predefined average time for the selected scan type. For Perimeter type, the count is capped at your <strong>External Scanners to Use</strong> limit (a small “max” badge appears when capped).</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 border-l-2 border-green-400">
+              <p class="font-medium text-gray-800 mb-1">Scanner Pool Size</p>
+              <p class="text-gray-600 text-xs mb-1">Optional — enter your current scanner count to unlock the spec comparison view, which shows how upgrading specs would change estimated total scan time for your existing pool.</p>
+              <ul class="text-gray-600 text-xs space-y-1">
+                <li><span class="font-semibold">Rounds</span> — how many rounds the scan would take at each spec tier with your current pool.</li>
+                <li><span class="font-semibold">Est. Duration</span> — rounds × the predefined avg time for the scan type.</li>
+                <li><span class="font-semibold">vs Current</span> — % faster (▼ green) or slower (▲ red) relative to your config row.</li>
+                <li><span class="font-semibold">Your Config row</span> — when a <strong>Desired Scan Duration</strong> is set, this row's <em>Est. Duration</em> reflects your <strong>actual</strong> pool count (labelled “with your N scanners”), while preset rows show the time at the scanner count each would need to hit the goal.</li>
+              </ul>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 border-l-2 border-purple-400">
+              <p class="font-medium text-gray-800 mb-1">Smart Recommendations</p>
+              <p class="text-gray-600 text-xs">When a <strong>Desired Scan Duration</strong> is set with an existing pool, the planner assesses your <strong>current spec</strong> against the goal and offers clear options:</p>
+              <ul class="text-gray-600 text-xs space-y-1 mt-1">
+                <li><span class="font-semibold">✅ / ⚠️</span> Pass / short verdict — if short, it states how many scanners short you are at your current spec.</li>
+                <li><span class="font-semibold">Add scanners</span> — minimum extra scanners of your current spec to meet the goal (capped at External Scanners to Use for Perimeter).</li>
+                <li><span class="font-semibold">Upgrade spec</span> — smallest standard tier that meets the goal with your existing pool count.</li>
+                <li><span class="font-semibold">Split the target list</span> — break the scan into smaller target lists to fit the window without changing scanners.</li>
+                <li><span class="font-semibold">Enable ML Scaling (×3)</span> — projects impact of turning on Parallel ML Scaling without any hardware change.</li>
+              </ul>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+              <p class="font-medium text-gray-800 mb-1">How spec affects total scan time</p>
+              <p class="text-gray-600 text-xs">A larger scanner spec increases <strong>Max Jobs per Scanner</strong> (more slices processed per round). More slices per round → fewer rounds → lower total time, even if per-round wall-clock time stays the same. Per-round time is driven by network topology and scan option profile, not scanner spec. <strong>Note:</strong> the <strong>Concurrent Scans and Maps</strong> limit caps Max Jobs per scanner — once a spec reaches that cap, a larger spec won't reduce time further until you raise the limit (or add scanners).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <p class="font-semibold text-amber-800 mb-1 text-xs">Disclaimer</p>
+          <p class="text-amber-700 text-xs leading-relaxed">All outputs are <strong>ballpark estimates</strong> based on standard scan profile settings, recommended scanner sizing, and normal target network conditions — with this assumed to be the only active scan on the scanner. A concurrent scan on the same scanner will reduce throughput. Actual performance also varies by: network topology, firewall rules, host responsiveness, and hypervisor resource contention. Always validate with a pilot scan before production rollout.</p>
+        </div>
+
+        <!-- Contact -->
+        <div class="bg-red-50 border border-red-100 rounded-lg p-4 flex items-start gap-3">
+          <svg class="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <div>
+            <p class="font-semibold text-red-700 text-xs mb-1">Questions or need help?</p>
+            <p class="text-red-600 text-xs leading-relaxed">Contact <strong>Qualys Support</strong> at <a href="https://www.qualys.com/support/" target="_blank" class="underline hover:text-red-800">qualys.com/support</a> for assistance with scanner sizing, configuration, or diagnosing performance issues.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <main class="max-w-7xl mx-auto px-6 py-8">
+    <div class="flex flex-col xl:flex-row gap-8">
+
+      <!-- ── LEFT PANEL: Inputs ── -->
+      <div class="xl:w-[480px] flex-shrink-0 space-y-5">
+
+        <!-- Scan Target Info -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <span class="w-5 h-5 bg-blue-100 rounded flex items-center justify-center">
+              <svg class="w-3 h-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+            </span>
+            Scan Configurations
+          </h2>
+
+          <!-- Scan Type -->
+          <div class="mb-5">
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Scan Type</label>
+            <div class="grid grid-cols-5 gap-2" id="scanTypeButtons">
+              <button onclick="setScanType('VM')"   class="scan-type-btn active-scan-type py-2 rounded-lg text-sm font-semibold border transition" data-type="VM">VM</button>
+              <button onclick="setScanType('PC')"   class="scan-type-btn py-2 rounded-lg text-sm font-semibold border transition" data-type="PC">PC</button>
+              <button onclick="setScanType('PCI')"  class="scan-type-btn py-2 rounded-lg text-sm font-semibold border transition" data-type="PCI">PCI</button>
+              <button onclick="setScanType('MAP')"  class="scan-type-btn py-2 rounded-lg text-sm font-semibold border transition" data-type="MAP">MAP</button>
+              <button onclick="setScanType('WAS')"  class="scan-type-btn py-2 rounded-lg text-sm font-semibold border transition" data-type="WAS">WAS</button>
+            </div>
+            <p id="scanTypeDesc" class="mt-2 text-xs text-gray-400"></p>
+          </div>
+
+          <!-- VM/PC: Target IP count -->
+          <div id="field-vmpc-ips" class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Alive IPs to Scan in Parallel</label>
+            <p class="text-xs text-gray-400 mb-2">Alive IPs that will be scanned in parallel (VM / PC / PCI)</p>
+            <input type="number" id="targetIPs" value="3000" min="0"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+              oninput="recalculate()" />
+            <p class="text-xs text-gray-400 mt-1.5">💡 Adjust <span class="font-medium text-gray-500">Parallel Host Scans (P)</span> below to match your scan profile — 30 is a good default when alive IPs > 30.</p>
+          </div>
+
+          <!-- MAP/WAS: Scan job count -->
+          <div id="field-mapwas-jobs" class="mb-4 hidden-field">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Number of Scan Jobs</label>
+            <p id="mapwas-jobs-hint" class="text-xs text-gray-400 mb-2">One job per target</p>
+            <input type="number" id="scanJobs" value="10" min="0"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+              oninput="recalculate()" />
+          </div>
+
+          <!-- Concurrent Scan Jobs -->
+          <div id="field-concurrent-jobs" class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Concurrent Scans and Maps <span class="text-xs text-gray-400 font-normal">(backoffice setting)</span></label>
+            <p class="text-xs text-gray-400 mb-2">Max scan jobs that can run at once across all scanners. Since a scanner runs <strong>one slice per job</strong>, this also caps how many slices each scanner runs in parallel — so <strong>Jobs to Create</strong> and the planner's <strong>Max Jobs</strong> are limited to this value.</p>
+            <input type="number" id="concurrentJobs" value="100" min="1"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              oninput="recalculate()" />
+          </div>
+
+          <!-- WAS: Concurrent WAS scans -->
+          <div id="field-concurrent-was" class="mb-4 hidden-field">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Concurrent WAS Scans <span class="text-xs text-gray-400 font-normal">(backoffice setting)</span></label>
+            <p class="text-xs text-gray-400 mb-2">Max WAS scan jobs running simultaneously across all scanners</p>
+            <input type="number" id="concurrentWAS" value="10" min="1"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              oninput="recalculate()" />
+          </div>
+
+          <!-- Scan Time Goal (VM/PC only) -->
+          <div id="field-time-goal" class="mb-4 border border-blue-100 bg-blue-50 rounded-xl p-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Desired Scan Duration <span class="text-xs text-gray-400 font-normal">(optional)</span></label>
+            <p class="text-xs text-gray-400 mb-2">How long you have to complete the scan — enter hours or minutes using the toggle (e.g. 10 hrs overnight, or 60 min for short batches). This unlocks the <strong class="text-blue-600">Scan Time Planner</strong> on the right — use it to find the right spec and scanner count for your window instead of sizing for maximum parallelism.</p>
+            <div class="flex items-center gap-2">
+              <input type="number" id="timeGoalHours" value="" min="1" max="168" step="0.5" placeholder="e.g. 10"
+                class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                oninput="recalculate()" />
+              <div class="flex rounded-lg overflow-hidden border border-gray-300 text-xs font-medium">
+                <button id="tgu-hrs" onclick="setTimeGoalUnit('hrs')" class="px-2.5 py-1.5 bg-blue-600 text-white">hrs</button>
+                <button id="tgu-min" onclick="setTimeGoalUnit('min')" class="px-2.5 py-1.5 bg-white text-gray-500">min</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scanner Pool Size -->
+          <div id="field-pool-size" class="mb-4 border border-blue-100 bg-blue-50 rounded-xl p-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Scanner Pool Size <span class="text-xs text-gray-400 font-normal">(optional)</span></label>
+            <p class="text-xs text-gray-400 mb-2">How many scanners are in your current pool. Unlocks the spec comparison view — see Est. Duration across standard specs with your existing scanner count.</p>
+            <input type="number" id="poolSizeInput" min="1" placeholder="e.g. 2"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              oninput="recalculate()" />
+          </div>
+
+          <div id="field-perf-settings" class="border-t border-gray-100 pt-4 mt-2">
+            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <span class="w-4 h-4 bg-green-100 rounded flex items-center justify-center">
+                <svg class="w-2.5 h-2.5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              </span>
+              Scan Performance Settings <span class="text-[10px] text-gray-400 font-normal normal-case tracking-normal">(Option Profile setting)</span>
+            </p>
+
+            <!-- Parallel Host Scans (C11) — feeds B14/B15 slice calculations -->
+            <div class="mb-5">
+              <div class="flex justify-between items-center mb-1">
+                <label class="text-sm font-medium text-gray-700">Parallel Host Scans per Scanner per Slice (P)</label>
+                <input type="number" id="parallelVal" min="1" max="50" value="30"
+                  class="w-16 text-sm font-bold text-red-600 border border-gray-200 rounded px-2 py-0.5 text-right focus:outline-none focus:ring-1 focus:ring-red-400"
+                  oninput="syncSlider('parallelScans','parallelVal',1,50); recalculate()" />
+              </div>
+              <p class="text-xs text-gray-400 mb-2">Parallel target scans per scanner — set in Scan Performance settings in your Option Profile (1–50)</p>
+              <input type="range" id="parallelScans" min="1" max="50" value="30" class="slider-thumb"
+                oninput="syncBox('parallelScans','parallelVal'); recalculate()" />
+              <div class="flex justify-between text-xs text-gray-300 mt-1"><span>1</span><span>50</span></div>
+              <div id="parallel-clamp-msg" class="hidden mt-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                <span id="parallel-clamp-text"></span>
+              </div>
+            </div>
+
+            <!-- ML Scaling -->
+            <div id="field-mlscaling">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Parallel ML Scaling</label>
+              <p class="text-xs text-gray-400 mb-3">When ON, multiplies parallelism by 3× (set in Scan Performance settings in your Option Profile)</p>
+              <div class="flex gap-3">
+                <button id="btn-scaling-off" onclick="setScaling('OFF')"
+                  class="flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 border-blue-600 text-blue-700 bg-blue-50 transition">
+                  OFF
+                </button>
+                <button id="btn-scaling-on" onclick="setScaling('ON')"
+                  class="flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 border-gray-200 text-gray-500 bg-gray-50 transition hover:border-gray-300">
+                  ON <span class="font-normal text-xs">(3× P)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Scanner Configuration -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <span class="w-5 h-5 bg-blue-100 rounded flex items-center justify-center">
+              <svg class="w-3 h-3 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/></svg>
+            </span>
+            Scanner Appliance Configuration
+          </h2>
+
+          <!-- Scanner Type -->
+          <div class="mb-5">
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Scanner Type</label>
+            <select id="scannerType" onchange="onScannerTypeChange()" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500">
+              <option value="Virtual-or-Container-Internal">Virtual / Container (Internal)</option>
+              <option value="Physical-6120-B1">Physical — 6120-B1 (NVXE) · 1,245 units</option>
+              <option value="Physical-6120-A1">Physical — 6120-A1 (NVX) · 1,040 units</option>
+              <option value="Perimeter">Virtual Perimeter</option>
+            </select>
+            <p id="scannerTypeNote" class="mt-1.5 text-xs text-gray-400"></p>
+          </div>
+
+          <!-- Perimeter: External scanner pool cap -->
+          <div id="field-ext-scanners" class="mb-4 hidden-field">
+            <label class="block text-sm font-medium text-gray-700 mb-1">External Scanners to Use</label>
+            <p class="text-xs text-gray-400 mb-2">Number of External/Perimeter scanners bound to your subscription — recommendations will not suggest exceeding this count</p>
+            <input type="number" id="extScanners" value="40" min="1"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              oninput="recalculate()" />
+          </div>
+
+          <!-- Virtual-only fields -->
+          <div id="virtual-fields">
+            <!-- CPU Speed -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Base CPU Speed (MHz)</label>
+              <p class="text-xs text-gray-400 mb-2">Hypervisor setting — check your VM's CPU spec in the virtualization platform (e.g. VMware, AWS, Azure). Also visible in scanner boot logs. Users cannot change CPU speed directly.</p>
+              <input type="number" id="cpuSpeed" value="2600" min="100"
+                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                oninput="recalculate()" />
+            </div>
+
+            <!-- Hyperthreading toggle -->
+            <div class="mb-4">
+              <div class="flex items-center gap-3 mb-1">
+                <input type="checkbox" id="hasHT" onchange="recalculate()"
+                  class="w-4 h-4 accent-red-600 cursor-pointer" />
+                <label for="hasHT" class="text-sm font-medium text-gray-700 cursor-pointer">Hyperthreading / SMT (HT) enabled</label>
+              </div>
+              <p class="text-xs text-gray-400 ml-7">Hypervisor setting — visible in VM CPU spec or scanner boot logs. Some platforms (e.g. VMware, Oracle Cloud) allow per-VM HT control.</p>
+            </div>
+
+            <!-- vScanner CPUs (C16) — feeds capacity formula (CPU is usually the bottleneck) -->
+            <div id="field-vcpus" class="mb-4">
+              <div class="flex justify-between items-center mb-1">
+                <label class="text-sm font-medium text-gray-700">vScanner CPUs</label>
+                <input type="number" id="vcpuVal" min="1" max="32" value="4"
+                  class="w-16 text-sm font-bold text-red-600 border border-gray-200 rounded px-2 py-0.5 text-right focus:outline-none focus:ring-1 focus:ring-red-400"
+                  oninput="syncSlider('vcpus','vcpuVal',1,32); updateVmemHint(); recalculate()" />
+              </div>
+              <p id="vcpu-hint" class="text-xs text-gray-400 mb-2">Virtual CPUs allocated to the scanner — recommended: <strong>4+</strong> (1–32)</p>
+              <input type="range" id="vcpus" min="1" max="32" value="4" class="slider-thumb"
+                oninput="syncBox('vcpus','vcpuVal'); updateVmemHint(); recalculate()" />
+              <div class="flex justify-between text-xs text-gray-300 mt-1"><span>1</span><span>32</span></div>
+            </div>
+
+            <!-- vScanner Memory (C17) — feeds capacity formula -->
+            <div id="field-vmem" class="mb-1">
+              <div class="flex justify-between items-center mb-1">
+                <label class="text-sm font-medium text-gray-700">vScanner Memory (GBs)</label>
+                <input type="number" id="vmemVal" min="2" max="64" value="8"
+                  class="w-16 text-sm font-bold text-red-600 border border-gray-200 rounded px-2 py-0.5 text-right focus:outline-none focus:ring-1 focus:ring-red-400"
+                  oninput="syncSlider('vmem','vmemVal',2,64); recalculate()" />
+              </div>
+              <p id="vmem-hint" class="text-xs text-gray-400 mb-2">RAM allocated to the virtual scanner — recommended: <strong>8+ GB</strong> (2–64 GB)</p>
+              <input type="range" id="vmem" min="2" max="64" value="8" class="slider-thumb"
+                oninput="syncBox('vmem','vmemVal'); recalculate()" />
+              <div class="flex justify-between text-xs text-gray-300 mt-1"><span>2 GB</span><span>64 GB</span></div>
+            </div>
+
+            <!-- CPU:RAM ratio reference -->
+            <div id="sizing-ref-card" class="mt-4 mb-4 rounded-lg border border-purple-100 bg-purple-50 p-3">
+              <p class="text-xs font-semibold text-purple-800 mb-2">📐 CPU : RAM Sizing Reference</p>
+              <table class="w-full text-xs text-purple-700">
+                <thead><tr class="border-b border-purple-200">
+                  <th class="text-left pb-1 font-semibold">Profile</th>
+                  <th class="text-center pb-1 font-semibold">vCPUs</th>
+                  <th class="text-center pb-1 font-semibold">RAM</th>
+                  <th class="text-center pb-1 font-semibold">Ratio</th>
+                </tr></thead>
+                <tbody id="sizing-ref-tbody" class="divide-y divide-purple-100">
+                  <tr><td class="py-1">Min stable</td><td class="text-center">2</td><td class="text-center">4 GB</td><td class="text-center">1:2</td></tr>
+                  <tr><td class="py-1">Small / Medium</td><td class="text-center font-semibold">4</td><td class="text-center font-semibold">8 GB</td><td class="text-center">1:2</td></tr>
+                  <tr><td class="py-1">Enterprise</td><td class="text-center font-semibold">8 and above</td><td class="text-center font-semibold">16 GB and above</td><td class="text-center">1:2</td></tr>
+                </tbody>
+              </table>
+              <p id="sizing-ref-note" class="mt-2 text-xs text-purple-600">Ideal ratio: <strong>1:2 or 1:3</strong> (vCPU:GB). Max: 1:4.</p>
+            </div>
+
+            <!-- Disk recommendation -->
+            <div class="mt-4 rounded-lg border border-orange-200 bg-orange-50 p-3">
+              <p class="text-xs font-semibold text-orange-800 mb-1">💾 Disk — Recommended: 100 GB+</p>
+              <p class="text-xs text-orange-700 leading-relaxed">The default disk size works well for most small to medium scans. For large or frequent scans, provision at least <strong>100 GB</strong>. If you hit "disk full" errors, increase disk allocation. <strong>Disable the Debug Scan setting</strong> in the Qualys portal before scheduling scans — it dramatically inflates disk usage and can render a scanner unusable.</p>
+            </div>
+
+            <!-- Perimeter: enterprise upgrade note -->
+            <div id="perimeter-enterprise-note" class="hidden-field mt-4 rounded-lg border border-blue-200 bg-blue-50 p-3">
+              <p class="text-xs font-semibold text-blue-800 mb-1">🏢 Large Enterprise / High Load</p>
+              <p class="text-xs text-blue-700 leading-relaxed">For large enterprise environments or scanners under sustained high load, consider upgrading to <strong>16 vCPUs / 32 GB RAM</strong> for increased throughput and stability.</p>
+            </div>
+          </div>
+
+          <!-- Physical scanner note -->
+          <div id="physical-note" class="hidden-field bg-gray-50 rounded-lg p-3 text-xs text-gray-500 border border-gray-100">
+            Physical scanners have fixed hardware resources and a preset capacity. CPU and RAM inputs do not apply.
+          </div>
+        </section>
+
+
+      </div>
+
+      <!-- ── RIGHT PANEL: Results ── -->
+      <div class="flex-1 space-y-5">
+
+        <!-- Primary result -->
+        <div id="card-scanners" class="result-card bg-gradient-to-br from-blue-900 to-blue-800 rounded-2xl shadow-lg p-8 text-white">
+          <p class="text-white text-lg font-bold uppercase tracking-widest mb-1">Scanner Capacity &amp; Scanning Strategy</p>
+          <p class="text-blue-200/70 text-xs mb-3">Scanner count shown for all-at-once parallel scan &mdash; spread jobs across windows to use fewer</p>
+
+          <!-- Single-number mode (MAP/WAS/LOW_CAP) -->
+          <div id="scanners-single">
+            <div class="flex items-baseline gap-3 mb-3">
+              <div id="result-scanners" class="text-7xl font-black">—</div>
+              <span class="text-2xl font-semibold text-white/60">Scanners</span>
+            </div>
+            <p id="result-scanners-note" class="text-blue-200 text-sm">Enter inputs to see estimate</p>
+          </div>
+
+          <!-- Trade-off table mode (VM/PC) -->
+          <div id="scanners-table-wrap" class="hidden-field bg-gray-500/30 rounded-xl p-5 mt-2">
+            <p class="text-white text-sm font-bold uppercase tracking-widest mb-1">Parallelism Tradeoff</p>
+            <p class="text-blue-300 text-xs mb-3">These counts target maximum parallelism (single-round completion) with the current config.</p>
+            <p class="text-blue-100/90 text-sm font-medium leading-relaxed mb-4">
+              <span class="text-amber-300 font-bold">You don’t necessarily need the top number.</span> These rows show how many scanners you need at different levels of parallelism — fewer scanners work fine if you spread jobs across multiple scan windows.
+              The <strong class="text-amber-300">Jobs to Create</strong> column shows the minimum jobs to create so each scanner runs up to <span id="dur-maxjobs-inline" class="font-semibold">—</span> slices in parallel. Adjust scanner count, specs, or job count to fit your scan window.
+              <span id="tradeoff-burst-note" class="block mt-1 text-blue-200">Each row assumes ~5–10 min per burst (ballpark).</span>
+              <span id="tradeoff-concurrent-note" class="block mt-1 text-amber-200 hidden"></span>
+            </p>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b border-gray-400/30 text-blue-100">
+                    <th class="text-left text-xs font-semibold uppercase tracking-wider pb-2">Strategy</th>
+                    <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2 text-green-300" title="Max scanners running in parallel for this strategy">Scanners<br><span class="text-[10px] font-normal normal-case tracking-normal opacity-70">(max parallel)</span></th>
+                    <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2 text-amber-300" title="Minimum jobs to create for this strategy — one lever among scanner count and specs">Jobs to Create</th>
+                    <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2">Slices/Burst</th>
+                    <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2">Bursts</th>
+                    <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2">Est. Duration</th>
+                  </tr>
+                </thead>
+                <tbody id="tradeoff-rows" class="divide-y divide-gray-400/25"></tbody>
+              </table>
+            </div>
+            <p class="text-amber-100 text-xs mt-3 leading-relaxed bg-amber-500/15 border border-amber-400/40 rounded-lg px-3 py-2.5">
+              <span class="text-amber-300 font-semibold">⚠ Estimates assume:</span> standard Qualys scan profile settings, recommended scanner sizing, and normal target network conditions — with <strong>this scan running alone on the scanner</strong>. A concurrent scan on the same scanner will reduce throughput. Actual speed also varies by: open ports, port range, authentication, target network response, and number of vulnerabilities to process.
+            </p>
+          </div>
+
+          <!-- Scan Time Planner (embedded in blue card) -->
+          <div id="card-time-goal" class="hidden-field bg-gray-500/30 rounded-xl mt-5 p-5 border border-gray-400/30">
+            <p class="text-white text-sm font-bold uppercase tracking-widest mb-1">Scan Time Planner</p>
+            <p id="time-goal-subtitle" class="text-blue-200/70 text-xs mb-4"></p>
+            <div id="time-planner-table" class="overflow-x-auto mb-4"></div>
+            <div id="time-planner-recs" class="space-y-2"></div>
+          </div>
+
+          <!-- VM/PC tips -->
+          <div id="card-scanners-info" class="mt-5 pt-4 border-t border-blue-400/30 space-y-2">
+            <ul class="text-blue-100/70 text-xs space-y-1.5 leading-relaxed list-none">
+              <li><span class="text-amber-300 font-semibold">⚠ Avoid one XL job.</span> A single oversized job forces all slices through one queue. Instead, <span class="text-white font-semibold">create multiple medium-to-large jobs</span> sized to match your scanner count — each scanner handles one slice per job at a time, so more jobs = more parallel throughput.</li>
+              <li><span class="text-cyan-300 font-semibold">📅 Spread across scan windows.</span> If you run scans in <span class="text-white font-semibold">2–3 scheduled windows</span> per day (or across the week), the same smaller pool of scanners covers your full target set — dramatically reducing the scanners needed versus a single all-at-once burst. Scheduling scans across multiple windows lets you reuse a smaller pool rather than running everything at once.</li>
+              <li><span class="text-white font-semibold">Keep your pool uniformly sized</span> (same vCPUs, RAM, and type). Mixed specs create uneven capacity, wasted slots, and unpredictable scan times.</li>
+            </ul>
+          </div>
+
+          <!-- MAP/WAS tips -->
+          <div id="card-scanners-info-mapwas" class="hidden mt-5 pt-4 border-t border-blue-400/30 space-y-2">
+            <p class="text-blue-100/90 text-sm font-medium leading-relaxed">
+              <span class="font-bold text-white">Each scanner runs one job at a time.</span> The count above reflects running all jobs simultaneously.
+            </p>
+            <ul class="text-blue-100/70 text-xs space-y-1.5 leading-relaxed list-none">
+              <li><span class="text-amber-300 font-semibold">MAP jobs are indivisible.</span> A MAP job covers a full subnet or domain and runs as a single unit — it cannot be split. Plan your batch sizes around the number of subnets/domains to map.</li>
+              <li><span class="text-cyan-300 font-semibold">📅 Batch jobs across scan windows.</span> Rather than running all jobs at once, group them into <span class="text-white font-semibold">2–3 sequential windows</span>. The same smaller scanner pool handles each batch in turn, significantly reducing the total scanners provisioned.</li>
+              <li><span class="text-white font-semibold">Keep your pool uniformly sized</span> (same vCPUs, RAM, and type). Mixed specs create uneven job distribution and unpredictable scan times.</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- Perimeter cap warning -->
+        <div id="perimeter-cap-msg" class="hidden rounded-xl border border-orange-300 bg-orange-50 px-4 py-3 text-sm text-orange-800"></div>
+
+        <!-- Secondary results -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="result-card bg-blue-50 rounded-2xl shadow-sm border border-blue-100 p-5">
+            <p class="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-1">Scanner Capacity</p>
+            <div id="result-capacity" class="text-3xl font-bold text-blue-800 mb-1">—</div>
+            <p class="text-xs text-blue-400">capacity units (idle)</p>
+          </div>
+          <div id="card-maxjobs" class="result-card bg-blue-50 rounded-2xl shadow-sm border border-blue-100 p-5">
+            <p class="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-1">Max Slices in Parallel / Scanner</p>
+            <div id="result-maxjobs" class="text-3xl font-bold text-blue-800 mb-1">—</div>
+            <p class="text-xs text-blue-400">max simultaneous jobs (1 slice per job at a time)</p>
+          </div>
+          <div id="card-slices" class="result-card bg-blue-50 rounded-2xl shadow-sm border border-blue-100 p-5">
+            <p class="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-1">Total Slices</p>
+            <div id="result-slices" class="text-3xl font-bold text-blue-800 mb-1">—</div>
+            <p class="text-xs text-blue-400">slices needed to cover all target IPs</p>
+          </div>
+        </div>
+
+        <!-- Explanation panel -->
+        <div id="explanation-panel" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <h3 class="text-sm font-semibold text-gray-700 mb-3">How to read these results</h3>
+          <div id="explanation-text" class="text-sm text-gray-500 space-y-2 leading-relaxed">
+            <p>Adjust the inputs on the left to see estimates update in real time.</p>
+            <p><strong>Jobs &amp; Slices:</strong> A scan job is divided into one or more slices, each covering up to P target IPs. A scanner is assigned <strong>one slice per job at a time</strong>. To run more slices on the same scanner simultaneously, <strong>split large jobs into multiple smaller jobs</strong> — each job contributes one slice to the scanner at once, increasing parallel throughput without adding hardware.</p>
+            <p>These are <strong>ballpark</strong> estimates based on standard Qualys scan profile settings, recommended scanner sizing, and normal target network conditions — assuming <strong>this is the only scan running on the scanner</strong>. A concurrent scan on the same scanner will reduce throughput. Actual results also vary by: scan preferences, network speed, QID count, port list, intermediate hops, and environment settings.</p>
+          </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div id="recommendations-panel" class="bg-amber-50 border border-amber-200 rounded-2xl p-6 hidden-field">
+          <h3 class="text-sm font-semibold text-amber-800 mb-3 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.347.347a3.75 3.75 0 01-5.303 0l-.347-.347z"/></svg>
+            Recommendations
+          </h3>
+          <ul id="recommendations-list" class="text-sm text-amber-700 space-y-2 list-disc list-inside leading-relaxed"></ul>
+        </div>
+
+        <!-- Input summary table (shown after first calc) -->
+        <div id="summary-panel" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hidden-field">
+          <h3 class="text-sm font-semibold text-gray-700 mb-4">Current Configuration Summary</h3>
+          <table class="w-full text-sm">
+            <tbody id="summary-table" class="divide-y divide-gray-50"></tbody>
+          </table>
+        </div>
+
+        <!-- Download buttons -->
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button onclick="downloadXLSX()"
+            class="flex-1 flex items-center justify-center gap-2.5 bg-white border-2 border-blue-200 text-blue-700 font-semibold rounded-2xl py-4 px-6 hover:bg-blue-50 hover:border-blue-400 transition shadow-sm text-sm">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Download (.xlsx)
+          </button>
+          <button onclick="downloadCSV()"
+            class="flex-1 flex items-center justify-center gap-2.5 bg-white border-2 border-blue-100 text-blue-600 font-semibold rounded-2xl py-4 px-6 hover:bg-blue-50 hover:border-blue-300 transition shadow-sm text-sm">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-7 4h14a2 2 0 002-2V8l-6-6H5a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+            </svg>
+            Download (.csv)
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+<script>
+// ─────────────────────────────────────────────
+// SLIDER ↔ BOX SYNC
+// ─────────────────────────────────────────────
+function syncBox(sliderId, boxId) {
+  document.getElementById(boxId).value = document.getElementById(sliderId).value;
+}
+function syncSlider(sliderId, boxId, min, max) {
+  const box = document.getElementById(boxId);
+  const slider = document.getElementById(sliderId);
+  let v = parseInt(box.value);
+  if (isNaN(v)) return;
+  v = Math.min(max, Math.max(min, v));
+  slider.value = v;
+}
+
+// ─────────────────────────────────────────────
+// HELP MODAL
+// ─────────────────────────────────────────────
+function openHelp() {
+  const modal = document.getElementById('help-modal');
+  const panel = document.getElementById('help-panel');
+  modal.classList.remove('opacity-0', 'invisible');
+  panel.classList.remove('translate-x-full');
+  document.body.style.overflow = 'hidden';
+}
+function closeHelp() {
+  const modal = document.getElementById('help-modal');
+  const panel = document.getElementById('help-panel');
+  modal.classList.add('opacity-0', 'invisible');
+  panel.classList.add('translate-x-full');
+  document.body.style.overflow = '';
+}
+function closeHelpIfBackdrop(e) {
+  if (e.target === document.getElementById('help-modal') ||
+      e.target === document.querySelector('#help-modal > .absolute')) {
+    closeHelp();
+  }
+}
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let state = {
+  scanType: 'VM',
+  mlScaling: 'OFF',
+};
+
+// ─────────────────────────────────────────────
+// CONSTANTS
+// ─────────────────────────────────────────────
+const K = {
+  VIRTUAL_PENALTY:         0.6,   // Virtual Penalty (3/5) — applied to virtual-internal scanners
+  HT_PENALTY:              0.6,   // HT Penalty (3/5) — applied to effective CPU speed when HT is detected
+  CAP_WEIGHT_PER_100MB:    10,    // Capacity weight per 100 MB RAM
+  CAP_WEIGHT_PER_100MHZ:   5,     // Capacity weight per 100 MHz CPU speed
+  CPU_SPEED_MHZ:           2600,  // CPU speed, MHz (default; conservative estimate)
+  VM_SCAN_COST:            2,     // VM scan cost
+  PC_SCAN_COST:            4,     // PC
+  WAS_SCAN_COST:           70,    // WAS
+  MAP_SCAN_COST:           100,   // MAP
+  PHYS_NVX_A1_CAP:         1040,  // QGSA-6120-A1 (NVX) — Qualys physical scanner docs
+  PHYS_NVXE_B1_CAP:        1245,  // QGSA-6120-B1 (NVXE) — Qualys physical scanner docs
+  VIRTUAL_LOWEST_CAP:      209,   // Capacity of lowest recommended Virtual Scanner
+  CAP_PER_SLICE_NO_ML:     100,   // Scanner Capacity required per scan slice per scanner without parallel ML scaling; OFF
+  CAP_PER_SLICE_ML:        300,   // Scanner Capacity required per scan slice per scanner with parallel ML scaling; ON
+  DEFAULT_PARALLEL_SLICES: 1,     // Default number of slices sent per scan per scanner in parallel
+};
+
+// ─────────────────────────────────────────────
+// FORMULA HELPERS
+// ─────────────────────────────────────────────
+function calcB14(scanType, cpus) {
+  // Max slice cost without ML scaling
+  if (scanType === 'VM' || scanType === 'PCI') return cpus * K.VM_SCAN_COST;
+  if (scanType === 'PC')  return cpus * K.PC_SCAN_COST;
+  if (scanType === 'WAS') return K.WAS_SCAN_COST;
+  return K.MAP_SCAN_COST; // MAP
+}
+
+function calcB15(scanType, cpus) {
+  // Max slice cost with ML scaling
+  if (scanType === 'VM' || scanType === 'PCI') return cpus * K.VM_SCAN_COST * 3;
+  if (scanType === 'PC')  return cpus * K.PC_SCAN_COST * 3;
+  if (scanType === 'WAS') return K.WAS_SCAN_COST;
+  return K.MAP_SCAN_COST; // MAP
+}
+
+function calcCapacity(scannerType, memGBs, numCPUs, cpuMhz, hasHT) {
+  // Physical scanners: fixed preset capacity
+  if (scannerType === 'Physical-6120-A1') return K.PHYS_NVX_A1_CAP;
+  if (scannerType === 'Physical-6120-B1') return K.PHYS_NVXE_B1_CAP;
+
+  // --- Memory contribution ---
+  const memTotalKB = memGBs * 1024 * 1024;
+  const mem100mb   = Math.floor(memTotalKB / 100000);
+  const memcap     = mem100mb * K.CAP_WEIGHT_PER_100MB;  // 10 units per 100MB
+
+  // --- CPU contribution --- 40% HT penalty (×3/5) when hyperthreading is detected
+  let totalmhz = numCPUs * cpuMhz;
+  if (hasHT) totalmhz = Math.floor((totalmhz * 3) / 5);
+  const spd100mhz = Math.floor(totalmhz / 100);
+  const speedcap  = spd100mhz * K.CAP_WEIGHT_PER_100MHZ;  // 5 units per 100MHz
+
+  // --- Bottleneck (MIN wins) ---
+  let estimated = Math.min(memcap, speedcap);
+
+  // --- Virtual-internal penalty (not applied to perimeter/E-scanner) ---
+  if (scannerType === 'Virtual-or-Container-Internal') {
+    estimated = Math.floor((estimated * 3) / 5);
+  }
+
+  return estimated;
+}
+
+function calcMaxJobsPerScanner(capacity, mlScaling, b14, b15) {
+  const divisor = mlScaling === 'ON' ? b15 : b14;
+  if (divisor === 0) return 0;
+  return Math.round(capacity / divisor);
+}
+
+function calcSlices(scanType, targetIPs, mlScaling, b14, b15) {
+  const st = scanType.toLowerCase();
+  if (st === 'map' || st === 'was') return 'N/A';
+  const divisor = mlScaling === 'ON' ? b15 : b14;
+  if (divisor === 0) return 0;
+  return Math.round(targetIPs / divisor);
+}
+
+function calcScannersNeeded(scanType, scanJobs, targetIPs, maxJobsPerScanner, slices) {
+  const st = scanType.toLowerCase();
+  if (maxJobsPerScanner === 0) return 'LOW_CAP';
+  if (st === 'map' || st === 'was') {
+    return Math.ceil(scanJobs / maxJobsPerScanner);
+  }
+  if (slices === 0) return 'LOW_CAP';
+  return Math.ceil(slices / maxJobsPerScanner);
+}
+
+function calcEstimatedDuration(scanType, scanners, slices, maxJobsPerScanner) {
+  // Only meaningful for VM/PC (IP-based)
+  const st = scanType.toLowerCase();
+  if (st === 'map' || st === 'was') return null;
+  if (typeof scanners !== 'number' || scanners <= 0) return null;
+  if (typeof slices !== 'number' || slices <= 0) return null;
+  if (!maxJobsPerScanner || maxJobsPerScanner <= 0) return null;
+  // Total parallel slice capacity = scanners × maxJobsPerScanner
+  // rounds = how many passes until all slices are covered
+  const rounds = Math.ceil(slices / (scanners * maxJobsPerScanner));
+  if (st === 'pci') return { rounds, minMins: rounds * 60, maxMins: rounds * 120 };
+  return { rounds, minMins: rounds * 5, maxMins: rounds * 10 };
+}
+
+function formatDuration(mins) {
+  if (mins < 60) return `${mins} min`;
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return m === 0 ? `${h} hr` : `${h} hr ${m} min`;
+}
+
+function calcScenario(scanType, mlScaling, scannerType, memGBs, numCPUs, cpuMhz, hasHT, targetIPs, scanJobs, p) {
+  const b14 = calcB14(scanType, p);
+  const b15 = calcB15(scanType, p);
+  const capacity = calcCapacity(scannerType, memGBs, numCPUs, cpuMhz, hasHT);
+  const maxJobs  = calcMaxJobsPerScanner(capacity, mlScaling, b14, b15);
+  const slices   = calcSlices(scanType, targetIPs, mlScaling, b14, b15);
+  const scanners = calcScannersNeeded(scanType, scanJobs, targetIPs, maxJobs, slices);
+  const dur      = calcEstimatedDuration(scanType, scanners, slices, maxJobs);
+  return { scanners, dur, slices };
+}
+
+function updateTradeoffTable(scanType, mlScaling, scannerType, memGBs, numCPUs, cpuMhz, hasHT, targetIPs, scanJobs, currentP, currentScanners, concurrentLimit) {
+  const tbody  = document.getElementById('tradeoff-rows');
+  const single = document.getElementById('scanners-single');
+  const wrap   = document.getElementById('scanners-table-wrap');
+  const st = scanType.toLowerCase();
+  if (st === 'map' || st === 'was' || typeof currentScanners !== 'number' || currentScanners < 1) {
+    single.classList.remove('hidden-field');
+    wrap.classList.add('hidden-field');
+    return;
+  }
+  // Pre-compute slices and maxJobs (P is fixed)
+  const b14 = calcB14(scanType, currentP);
+  const b15 = calcB15(scanType, currentP);
+  const capacity = calcCapacity(scannerType, memGBs, numCPUs, cpuMhz, hasHT);
+  const maxJobs  = calcMaxJobsPerScanner(capacity, mlScaling, b14, b15);
+  const slices   = calcSlices(scanType, targetIPs, mlScaling, b14, b15);
+  if (typeof slices !== 'number' || slices <= 0 || maxJobs <= 0) {
+    single.classList.remove('hidden-field');
+    wrap.classList.add('hidden-field');
+    return;
+  }
+  // Per-round time range based on scan type
+  const minPerRound = st === 'pci' ? 60 : 5;
+  const maxPerRound = st === 'pci' ? 120 : 10;
+
+  // Effective max jobs/scanner folds in the per-scanner hardware max AND the "Concurrent Scans
+  // and Maps" limit (each job dispatches one slice per scanner, so #concurrent jobs = slices/scanner).
+  const effMaxJobs = concurrentLimit > 0 ? Math.min(maxJobs, concurrentLimit) : maxJobs;
+  // Populate inline maxJobs reference and burst note in intro text
+  const inlineEl = document.getElementById('dur-maxjobs-inline');
+  if (inlineEl) inlineEl.textContent = effMaxJobs;
+  const burstNote = document.getElementById('tradeoff-burst-note');
+  if (burstNote) burstNote.textContent = `Each row assumes ~${minPerRound}–${maxPerRound} min per burst — based on standard scan profile settings with this scan running alone on the scanner.`;
+  const concNote = document.getElementById('tradeoff-concurrent-note');
+  if (concNote) {
+    if (concurrentLimit > 0 && maxJobs > concurrentLimit) {
+      concNote.textContent = `⚙️ Concurrent Scans and Maps = ${concurrentLimit} caps each scanner at ${concurrentLimit} job${concurrentLimit !== 1 ? 's' : ''}/round (the hardware could run ${maxJobs}). Raise the limit or add scanners for more parallelism.`;
+      concNote.classList.remove('hidden');
+    } else {
+      concNote.classList.add('hidden');
+    }
+  }
+  // Strategy scenarios: Fastest, Balanced, Economical, Minimal
+  const strategies = [
+    { k: currentScanners,                                  label: 'Fastest',      tag: 'speed first',      icon: '⚡' },
+    { k: Math.max(1, Math.round(currentScanners * 0.75)),  label: 'Balanced',     tag: 'good middle ground', icon: '⚖' },
+    { k: Math.max(1, Math.round(currentScanners * 0.5)),   label: 'Economical',   tag: 'fewer scanners',   icon: '💰' },
+    { k: Math.max(1, Math.round(currentScanners * 0.25)),  label: 'Minimal pool', tag: 'lowest footprint', icon: '🐢' },
+  ];
+  // Dedupe by scanner count (avoids duplicate rows when currentScanners is small)
+  const seen = new Set();
+  const unique = strategies.filter(s => {
+    if (seen.has(s.k)) return false;
+    seen.add(s.k);
+    return true;
+  });
+  tbody.innerHTML = unique.map(({ k, label, tag, icon }) => {
+    // effMaxJobs (computed above) already folds in the per-scanner hardware max and the
+    // "Concurrent Scans and Maps" limit. Each job dispatches one slice per scanner.
+    const slicesPerRoundMax = k * effMaxJobs;
+    const rounds = Math.ceil(slices / slicesPerRoundMax);
+    // Min jobs to create: fewest slices/scanner (= jobs) needed to hit `rounds`, never above effMaxJobs.
+    const minJobs = Math.min(effMaxJobs, Math.max(1, Math.ceil(slices / (k * rounds))));
+    const slicesPerRound = k * minJobs; // actual when user creates exactly minJobs
+    const minMins = rounds * minPerRound;
+    const maxMins = rounds * maxPerRound;
+    const durTxt = `${formatDuration(minMins)} – ${formatDuration(maxMins)}`;
+    const isRec = tag === 'recommended';
+    const rowClass = isRec ? 'bg-white/10' : '';
+    const tagBadge = isRec
+      ? '<span class="text-[10px] bg-amber-300 text-blue-900 rounded-full px-2 py-0.5 ml-2 font-bold uppercase tracking-wider">Recommended</span>'
+      : `<span class="text-[10px] text-blue-200/70 ml-2">${tag}</span>`;
+    return `<tr class="${rowClass}">
+      <td class="py-3 pr-2 text-white text-xs">
+        <span class="font-semibold">${icon} ${label}</span>${tagBadge}
+      </td>
+      <td class="py-3 text-center"><span class="inline-block bg-white/15 rounded-md px-3 py-0.5 text-green-300 text-lg font-black">${k}</span></td>
+      <td class="py-3 text-center"><span class="inline-block bg-amber-300/20 rounded-md px-3 py-0.5 text-amber-300 text-lg font-black">${minJobs}</span></td>
+      <td class="py-3 text-center text-blue-200 text-xs">${slicesPerRound}</td>
+      <td class="py-3 text-center text-blue-200 text-xs">${rounds}</td>
+      <td class="py-3 text-center text-white text-xs font-semibold">${durTxt}</td>
+    </tr>`;
+  }).join('');
+
+  single.classList.add('hidden-field');
+  wrap.classList.remove('hidden-field');
+}
+
+// ─────────────────────────────────────────────
+// TIME GOAL UNIT HELPERS
+// ─────────────────────────────────────────────
+function getTimeGoalHours() {
+  const raw  = parseFloat(document.getElementById('timeGoalHours')?.value) || 0;
+  const unit = document.getElementById('tgu-min')?.classList.contains('bg-blue-600') ? 'min' : 'hrs';
+  return unit === 'min' ? raw / 60 : raw;
+}
+
+function setTimeGoalUnit(unit) {
+  const input  = document.getElementById('timeGoalHours');
+  const btnHrs = document.getElementById('tgu-hrs');
+  const btnMin = document.getElementById('tgu-min');
+  if (unit === 'min') {
+    btnMin.className = 'px-2.5 py-1.5 bg-blue-600 text-white';
+    btnHrs.className = 'px-2.5 py-1.5 bg-white text-gray-500';
+    input.placeholder = 'e.g. 60';
+    input.step = '1'; input.min = '1'; input.max = '9999';
+  } else {
+    btnHrs.className = 'px-2.5 py-1.5 bg-blue-600 text-white';
+    btnMin.className = 'px-2.5 py-1.5 bg-white text-gray-500';
+    input.placeholder = 'e.g. 10';
+    input.step = '0.5'; input.min = '1'; input.max = '168';
+  }
+  if (input.value) recalculate();
+}
+
+// ─────────────────────────────────────────────
+// SCAN TIME GOAL PLANNER
+// ─────────────────────────────────────────────
+function updateTimeGoalCard(scanType, scannerType, mlScaling, targetIPs, timeGoalHours, parallelP, cpus, memGBs, cpuMhz, hasHT) {
+  const card = document.getElementById('card-time-goal');
+  const st = scanType.toLowerCase();
+  const poolSize          = parseInt(document.getElementById('poolSizeInput')?.value) || 0;
+  const hasDurationInputs = poolSize > 0;
+  const needsTimeGoal     = timeGoalHours > 0;
+
+  const scanJobsVal = parseInt(document.getElementById('scanJobs')?.value) || 0;
+  const isWas = st === 'was';
+  const isJobBased = st === 'was' || st === 'map';
+  const effectiveTargets = isJobBased ? scanJobsVal : targetIPs;
+
+  if (effectiveTargets <= 0 || (!needsTimeGoal && !hasDurationInputs)) {
+    card.classList.add('hidden-field');
+    return;
+  }
+
+  const b14    = calcB14(scanType, parallelP);
+  const b15    = calcB15(scanType, parallelP);
+  const slices = isJobBased ? scanJobsVal : calcSlices(scanType, targetIPs, mlScaling, b14, b15);
+  if (!slices || slices <= 0) { card.classList.add('hidden-field'); return; }
+
+  const isPerim       = scannerType === 'Perimeter';
+  const isPhysical    = scannerType.startsWith('Physical');
+  const capKey        = scannerType; // calcCapacity handles all types correctly
+  const typeLabel     = isPerim ? 'External/Perimeter scanner' : 'Internal scanner';
+  const extScannerCap = isPerim ? (parseInt(document.getElementById('extScanners')?.value) || 40) : Infinity;
+
+  // "Concurrent Scans and Maps" caps how many jobs run at once; each job dispatches one slice per
+  // scanner, so it also caps the effective max jobs (slices) a single scanner can run in parallel.
+  const concurrentLimit = (isWas ? parseInt(document.getElementById('concurrentWAS')?.value)
+                                 : parseInt(document.getElementById('concurrentJobs')?.value)) || 0;
+
+  // Physical appliances have FIXED capacity — vCPU/RAM inputs don't apply to them.
+  const physCap     = isPhysical ? calcCapacity(capKey, memGBs, cpus, cpuMhz, hasHT) : null;
+  const physModel   = scannerType === 'Physical-6120-B1' ? '6120-B1 (NVXE)' : '6120-A1 (NVX)';
+  const specLabel   = isPhysical ? `fixed ${physCap?.toLocaleString()} cap units` : `${cpus}vCPU/${memGBs}GB${hasHT ? '/HT' : ''}`;
+  const specLabelSp = isPhysical ? `${physModel}, ${physCap?.toLocaleString()} cap units` : `${cpus}vCPU / ${memGBs}GB`;
+
+  const presets = [
+    { label: 'Minimal', cpus: 2, mem: 4  },
+    { label: 'Small',   cpus: 4, mem: 8  },
+    { label: 'Medium',  cpus: 4, mem: 16 },
+    { label: 'Large',   cpus: 8, mem: 16 },
+    { label: 'XL',      cpus: 8, mem: 32 },
+  ].filter(p => !isPhysical && (!isPerim || p.cpus >= 8));
+
+  const defaultRoundMins = st === 'pci' ? 60 : (st === 'map' ? 25 : (isWas ? 10 : 7.5));
+  const roundUnit        = isJobBased ? 'min/job' : 'min/round';
+  const sliceLabel       = st === 'was' ? 'WAS jobs' : (st === 'map' ? 'MAP jobs' : 'total slices');
+  const rawGoalVal = parseFloat(document.getElementById('timeGoalHours')?.value) || 0;
+  const goalIsMin  = document.getElementById('tgu-min')?.classList.contains('bg-blue-600');
+  const goalDisplay = rawGoalVal ? (goalIsMin ? `${rawGoalVal}m` : `${rawGoalVal}h`) : '—';
+  const maxGoalRounds    = needsTimeGoal ? Math.max(1, Math.floor((timeGoalHours * 60) / defaultRoundMins)) : null;
+  const goalMins           = needsTimeGoal ? timeGoalHours * 60 : null;
+
+  function fmtDur(mins) {
+    if (mins == null) return '—';
+    const h = Math.floor(mins / 60), m = Math.round(mins % 60);
+    return h > 0 ? (m > 0 ? `${h} hr ${m} min` : `${h} hr`) : `${m} min`;
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // MODE A — TIME GOAL SET: "How many scanners / what size do I need?"
+  // ══════════════════════════════════════════════════════════════════════════
+  if (needsTimeGoal) {
+    function calcSizingRow(numCpus, memGB, mhz, ht) {
+      const cap  = calcCapacity(capKey, memGB, numCpus, mhz, ht);
+      const mjHw = calcMaxJobsPerScanner(cap, mlScaling, b14, b15);
+      const mj   = concurrentLimit > 0 ? Math.min(mjHw, concurrentLimit) : mjHw;
+      const raw  = mj > 0 ? Math.ceil(slices / (maxGoalRounds * mj)) : null;
+      const goal = raw != null ? Math.min(raw, extScannerCap) : null;
+      const cap_ = raw != null && raw > extScannerCap;
+      const est  = goal != null && mj > 0
+        ? Math.ceil(slices / (goal * mj)) * defaultRoundMins : null;
+      const poolOk    = poolSize > 0 && goal != null ? poolSize >= goal : null;
+      const poolDelta = poolSize > 0 && goal != null ? goal - poolSize : null;
+      return { mj, goalScanners: goal, isCapped: cap_, estMins: est, poolOk, poolDelta, concCapped: concurrentLimit > 0 && mjHw > concurrentLimit };
+    }
+
+    const showPoolCol = poolSize > 0;
+
+    function countPill(n, isCapped) {
+      if (n == null) return '<span class="text-white/30 text-xs">—</span>';
+      const cls = n <= 3 ? 'bg-green-100 text-green-700' : n <= 8 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700';
+      const cap = isCapped ? '<span class="text-[9px] ml-0.5 opacity-60">max</span>' : '';
+      return `<span class="inline-block rounded-md px-2 py-0.5 text-xs font-bold ${cls}">${n}${cap}</span>`;
+    }
+
+    function poolCell(ok, delta) {
+      if (ok === null) return '<span class="text-white/30 text-xs">—</span>';
+      if (ok) return '<span class="text-green-400 text-xs font-semibold">✓ enough</span>';
+      return `<span class="text-red-400 text-xs font-semibold">+${delta} needed</span>`;
+    }
+
+    let th = `<tr class="border-b border-gray-400/30 text-blue-200/60">
+      <th class="text-left text-xs font-semibold uppercase tracking-wider pb-2 pr-2">Spec</th>
+      <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2">vCPU</th>
+      <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2">RAM</th>
+      <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2">Max Jobs</th>
+      <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2 text-blue-300">Scanners Needed<br><span class="text-[10px] font-normal normal-case tracking-normal">for ${goalDisplay} goal</span></th>
+      <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2">Est. Duration</th>`;
+    if (showPoolCol) th += `\n      <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2">Your Pool<br><span class="text-[10px] font-normal normal-case tracking-normal">(${poolSize} ${typeLabel}s)</span></th>`;
+    th += `\n    </tr>`;
+
+    function buildRow(label, numCpus, memGB, mhz, ht, isYour) {
+      const d   = calcSizingRow(numCpus, memGB, mhz, ht);
+      const bg  = isYour ? 'class="bg-gray-400/30"' : '';
+      const nc  = isYour ? 'text-white font-bold' : 'text-white';
+      const sc  = isYour ? 'text-blue-200' : 'text-blue-200/70';
+      const vc  = isYour ? 'text-blue-100' : 'text-blue-200';
+      const lbl = isYour
+        ? `${label}<span class="text-[10px] font-normal text-blue-300 ml-1">${specLabel}</span>`
+        : label;
+      // Est. duration: preset rows show the time at the needed scanner count;
+      // the user's own row shows the REAL time with their ACTUAL pool size.
+      let rowEstMins = d.estMins;
+      let estNote = '';
+      if (isYour && poolSize > 0 && d.mj > 0) {
+        rowEstMins = Math.ceil(slices / (poolSize * d.mj)) * defaultRoundMins;
+        estNote = `<span class="block text-[10px] font-medium text-blue-100 normal-case tracking-normal">with your ${poolSize} scanner${poolSize !== 1 ? 's' : ''}</span>`;
+      }
+      const timeColor = rowEstMins != null
+        ? (rowEstMins <= goalMins ? 'text-green-400 font-semibold' : 'text-red-400 font-semibold') : '';
+      const timeSpan = rowEstMins
+        ? `<span class="${timeColor}">${fmtDur(rowEstMins)}</span>${estNote}`
+        : '<span class="text-white/30 text-xs">—</span>';
+      let cells = `
+        <td class="py-2.5 pr-2 ${nc} text-xs font-semibold whitespace-nowrap">${lbl}</td>
+        <td class="py-2.5 text-center text-xs ${sc}">${isPhysical ? '—' : numCpus}</td>
+        <td class="py-2.5 text-center text-xs ${sc}">${isPhysical ? '—' : memGB + ' GB'}</td>
+        <td class="py-2.5 text-center text-xs ${vc} font-medium">${d.mj || '—'}</td>
+        <td class="py-2.5 text-center">${countPill(d.goalScanners, d.isCapped)}</td>
+        <td class="py-2.5 text-center">${timeSpan}</td>`;
+      if (showPoolCol) cells += `\n        <td class="py-2.5 text-center">${poolCell(d.poolOk, d.poolDelta)}</td>`;
+      return `<tr ${bg}>${cells}</tr>`;
+    }
+
+    let tbody = '';
+    presets.forEach(p => { tbody += buildRow(p.label, p.cpus, p.mem, 2600, false, false); });
+    tbody += buildRow('Your Config', cpus, memGBs, cpuMhz, hasHT, true);
+
+    document.getElementById('time-planner-table').innerHTML =
+      `<table class="w-full text-sm"><thead>${th}</thead><tbody class="divide-y divide-gray-400/25">${tbody}</tbody></table>`;
+
+    // Subtitle
+    document.getElementById('time-goal-subtitle').textContent =
+      `${typeLabel} · ${slices.toLocaleString()} ${sliceLabel} · ~${defaultRoundMins} ${roundUnit} est.`;
+
+    // ── Recommendations ────────────────────────────────────────────────────
+    const recs = [];
+    const allPresets = presets.map(p => ({ label: p.label, cpus: p.cpus, mem: p.mem, ...calcSizingRow(p.cpus, p.mem, 2600, false) }));
+    const yourRow    = { label: 'Your Config', cpus, mem: memGBs, ...calcSizingRow(cpus, memGBs, cpuMhz, hasHT) };
+
+    // Best option: fewest scanners (not capped)
+    const feasible = [...allPresets, yourRow].filter(r => r.goalScanners != null && !r.isCapped);
+    if (feasible.length > 0) {
+      const best = feasible.reduce((a, b) => a.goalScanners <= b.goalScanners ? a : b);
+      recs.push(`<p class="text-xs text-green-300 bg-green-900/40 border border-green-500/40 rounded-lg px-3 py-2">✅ <strong>Recommended: ${best.label}</strong> (${isPhysical ? specLabelSp : best.cpus + 'vCPU / ' + best.mem + 'GB'}) — <strong>${best.goalScanners} ${typeLabel}${best.goalScanners !== 1 ? 's' : ''}</strong> to complete within your ${timeGoalHours}h window${best.estMins != null ? ', est. ' + fmtDur(best.estMins) : ''}.</p>`);
+    }
+
+    // Concurrency cap note: when the limit throttles per-scanner jobs below hardware capability,
+    // larger specs stop reducing time — only raising the limit (or adding scanners) helps.
+    if ([...allPresets, yourRow].some(r => r.concCapped)) {
+      recs.push(`<p class="text-xs text-amber-300 bg-amber-900/40 border border-amber-500/40 rounded-lg px-3 py-2">⚙️ <strong>Concurrent Scans and Maps = ${concurrentLimit}</strong> caps each scanner at <strong>${concurrentLimit} job${concurrentLimit !== 1 ? 's' : ''}/round</strong> — below what larger specs could run. Bigger specs won't cut time further until you raise this limit (or add scanners).</p>`);
+    }
+
+    // If existing pool is set: assess against the user's CURRENT spec, then give options.
+    if (poolSize > 0) {
+      const poolLabel    = `${poolSize} ${typeLabel}${poolSize !== 1 ? 's' : ''}`;
+      const yourSpecTxt  = specLabelSp;
+      const yourNeeded   = yourRow.goalScanners;            // scanners needed at the user's current spec
+      const minSpecForPool = allPresets.find(r => r.poolOk === true); // smallest spec where existing pool count is enough
+
+      if (yourNeeded != null && poolSize >= yourNeeded) {
+        // Current spec + pool already meet the goal
+        recs.push(`<p class="text-xs text-green-300 bg-green-900/40 border border-green-500/40 rounded-lg px-3 py-2">✅ Your current spec (${yourSpecTxt}) with <strong>${poolLabel}</strong> already meets the ${timeGoalHours}h goal — no changes needed.</p>`);
+      } else if (yourNeeded != null) {
+        // Short at current spec — spell out how short, then give clear options
+        const moreNeeded = yourNeeded - poolSize;
+        const opts = [`<strong>add ${moreNeeded} more ${typeLabel}${moreNeeded !== 1 ? 's' : ''}</strong> at your current spec (${yourNeeded} total)`];
+        if (minSpecForPool) opts.push(`upgrade your ${poolLabel} to <strong>${minSpecForPool.label}</strong> spec (${minSpecForPool.cpus}vCPU / ${minSpecForPool.mem}GB) or better`);
+        opts.push(`<strong>split the target list</strong> into smaller scans to fit your time window`);
+        recs.push(`<p class="text-xs text-amber-300 bg-amber-900/40 border border-amber-500/40 rounded-lg px-3 py-2">⚠️ With your current spec (${yourSpecTxt}), your pool of <strong>${poolLabel}</strong> is <strong>${moreNeeded} short</strong> of the ${timeGoalHours}h goal. To meet it, choose one: ${opts.join('; ')}.</p>`);
+      } else {
+        // Capacity too low to compute (mj = 0)
+        recs.push(`<p class="text-xs text-amber-300 bg-amber-900/40 border border-amber-500/40 rounded-lg px-3 py-2">⚠️ Scanner capacity at your current spec (${yourSpecTxt}) is too low for this scan. Increase CPU/RAM, or <strong>split the target list</strong> into smaller scans.</p>`);
+      }
+    }
+
+    // P optimization
+    const recP = Math.min(30, targetIPs);
+    if (parallelP < recP) {
+      recs.push(`<p class="text-xs text-amber-300 bg-amber-900/40 border border-amber-500/40 rounded-lg px-3 py-2">💡 <strong>Increase P to ${recP}</strong> — reduces total slices by ~${Math.round((1 - parallelP / recP) * 100)}%, directly cutting the scanner count needed across all specs.</p>`);
+    }
+
+    recs.push(`<p class="text-xs text-blue-200">Est. times use ~${defaultRoundMins} ${roundUnit} default. Preset specs use 2600 MHz, HT off as conservative baseline.</p>`);
+    recs.push(`<p class="text-xs text-blue-100 bg-blue-900/50 border border-blue-400/40 rounded-lg px-3 py-2 mt-1">ℹ️ <strong class="text-white">About these estimates:</strong> The Scan Time Planner shows how long <em>this scan alone</em> should take under typical Qualys-recommended conditions. If your actual scan time is significantly higher, consider factors such as: other parallel scans running simultaneously, mixed or undersized scanner pool, scan option profile settings (port range, authentication), or slow target network response.</p>`);
+
+    document.getElementById('time-planner-recs').innerHTML = recs.join('');
+    card.classList.remove('hidden-field');
+    return;
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // MODE B — POOL + ROUND TIME (no goal): spec impact on your existing setup
+  // ══════════════════════════════════════════════════════════════════════════
+  function calcDurRow(numCpus, memGB, mhz, ht) {
+    const cap    = calcCapacity(capKey, memGB, numCpus, mhz, ht);
+    const mjHw   = calcMaxJobsPerScanner(cap, mlScaling, b14, b15);
+    const mj     = concurrentLimit > 0 ? Math.min(mjHw, concurrentLimit) : mjHw;
+    const rounds = mj > 0 ? Math.ceil(slices / (poolSize * mj)) : null;
+    const total  = rounds != null ? rounds * defaultRoundMins : null;
+    return { mj, rounds, totalMins: total, concCapped: concurrentLimit > 0 && mjHw > concurrentLimit };
+  }
+
+  const curDur = calcDurRow(cpus, memGBs, cpuMhz, hasHT);
+
+  function deltaCell(totalMins) {
+    if (!totalMins || !curDur.totalMins) return '<span class="text-white/30 text-xs">—</span>';
+    const pct = (totalMins - curDur.totalMins) / curDur.totalMins * 100;
+    if (Math.abs(pct) < 2) return '<span class="text-blue-200/60 text-xs">≈ same</span>';
+    const faster = pct < 0;
+    return `<span class="${faster ? 'text-green-400' : 'text-red-400'} font-bold text-xs">${faster ? '▼' : '▲'} ${Math.abs(Math.round(pct))}%</span>`;
+  }
+
+  const thB = `<tr class="border-b border-gray-400/30 text-blue-200/60">
+    <th class="text-left text-xs font-semibold uppercase tracking-wider pb-2 pr-2">Spec</th>
+    <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2">vCPU</th>
+    <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2">RAM</th>
+    <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2">Max Jobs</th>
+    <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2">Rounds</th>
+    <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2">Est. Duration</th>
+    <th class="text-center text-xs font-semibold uppercase tracking-wider pb-2">vs Current</th>
+  </tr>`;
+
+  function buildDurRow(label, numCpus, memGB, mhz, ht, isYour) {
+    const d   = calcDurRow(numCpus, memGB, mhz, ht);
+    const bg  = isYour ? 'class="bg-gray-400/30"' : '';
+    const nc  = isYour ? 'text-white font-bold' : 'text-white';
+    const sc  = isYour ? 'text-blue-200' : 'text-blue-200/70';
+    const vc  = isYour ? 'text-blue-100' : 'text-blue-200';
+    const lbl = isYour
+      ? `${label}<span class="text-[10px] font-normal text-blue-300 ml-1">${specLabel}</span>`
+      : label;
+    const timeSpan = d.totalMins
+      ? `<span class="font-semibold text-white">${fmtDur(d.totalMins)}</span>`
+      : '<span class="text-white/30 text-xs">—</span>';
+    return `<tr ${bg}>
+      <td class="py-2.5 pr-2 ${nc} text-xs font-semibold whitespace-nowrap">${lbl}</td>
+      <td class="py-2.5 text-center text-xs ${sc}">${isPhysical ? '—' : numCpus}</td>
+      <td class="py-2.5 text-center text-xs ${sc}">${isPhysical ? '—' : memGB + ' GB'}</td>
+      <td class="py-2.5 text-center text-xs ${vc} font-medium">${d.mj || '—'}</td>
+      <td class="py-2.5 text-center text-xs ${vc}">${d.rounds || '—'}</td>
+      <td class="py-2.5 text-center">${timeSpan}</td>
+      <td class="py-2.5 text-center">${isYour ? '<span class="text-blue-300 text-xs font-semibold">baseline</span>' : deltaCell(d.totalMins)}</td>
+    </tr>`;
+  }
+
+  let tbodyB = '';
+  presets.forEach(p => { tbodyB += buildDurRow(p.label, p.cpus, p.mem, 2600, false, false); });
+  tbodyB += buildDurRow('Your Config', cpus, memGBs, cpuMhz, hasHT, true);
+
+  document.getElementById('time-planner-table').innerHTML =
+    `<table class="w-full text-sm"><thead>${thB}</thead><tbody class="divide-y divide-gray-400/25">${tbodyB}</tbody></table>`;
+
+  document.getElementById('time-goal-subtitle').textContent =
+    `${typeLabel} — ${poolSize} scanner${poolSize !== 1 ? 's' : ''}, ${slices.toLocaleString()} ${sliceLabel} · ~${defaultRoundMins} ${roundUnit} est. · Set a Desired Scan Duration for sizing guidance`;
+
+  const recsB = [];
+  if (mlScaling === 'OFF' && !isJobBased) {
+    recsB.push(`<p class="text-xs text-indigo-300 bg-indigo-900/40 border border-indigo-500/40 rounded-lg px-3 py-2">💡 <strong>Enabling Parallel ML Scaling (×3)</strong> multiplies max jobs per scanner — up to 3× fewer rounds. Set a Desired Scan Duration to get exact scanner count recommendations.</p>`);
+  }
+  if (concurrentLimit > 0 && [...presets.map(p => calcDurRow(p.cpus, p.mem, 2600, false)), curDur].some(r => r.concCapped)) {
+    recsB.push(`<p class="text-xs text-amber-300 bg-amber-900/40 border border-amber-500/40 rounded-lg px-3 py-2">⚙️ <strong>Concurrent Scans and Maps = ${concurrentLimit}</strong> caps each scanner at <strong>${concurrentLimit} job${concurrentLimit !== 1 ? 's' : ''}/round</strong> — below what larger specs could run, so the Max Jobs column is limited to ${concurrentLimit}. Raise this limit to benefit from larger specs.</p>`);
+  }
+  recsB.push(`<p class="text-xs text-blue-200">${isPhysical ? 'Physical scanner — fixed capacity used.' : 'Preset specs use 2600 MHz, HT off as conservative baseline.'} Set a <strong>Desired Scan Duration</strong> to get scanner count and sizing guidance.</p>`);
+  recsB.push(`<p class="text-xs text-blue-100 bg-blue-900/50 border border-blue-400/40 rounded-lg px-3 py-2 mt-1">ℹ️ <strong class="text-white">About these estimates:</strong> The Scan Time Planner shows how long <em>this scan alone</em> should take under typical Qualys-recommended conditions. If your actual scan time is significantly higher, consider factors such as: other parallel scans running simultaneously, mixed or undersized scanner pool, scan option profile settings (port range, authentication), or slow target network response.</p>`);
+  document.getElementById('time-planner-recs').innerHTML = recsB.join('');
+  card.classList.remove('hidden-field');
+}
+
+// ─────────────────────────────────────────────
+// P vs ALIVE IPs ADVISORY WARNING
+// ─────────────────────────────────────────────
+function warnParallelVsIPs() {
+  const st = state.scanType.toLowerCase();
+  const msgEl  = document.getElementById('parallel-clamp-msg');
+  const txtEl  = document.getElementById('parallel-clamp-text');
+  if (st === 'map' || st === 'was') { msgEl.classList.add('hidden'); return; }
+  const ips      = parseInt(document.getElementById('targetIPs').value) || 0;
+  const currentP = parseInt(document.getElementById('parallelVal').value) || 1;
+  if (ips <= 0) { msgEl.classList.add('hidden'); return; }
+  const defaultP = document.getElementById('scannerType').value === 'Perimeter' ? 15 : 30;
+  if (currentP > ips) {
+    txtEl.textContent = `Parallel Host Scans P (${currentP}) exceeds alive IP count (${ips.toLocaleString()}) — consider reducing P to a value ≤ alive IP count.`;
+    msgEl.classList.remove('hidden');
+  } else if (ips >= defaultP && currentP < defaultP) {
+    txtEl.textContent = `Parallel Host Scans P (${currentP}) is below the recommended default of ${defaultP} — consider increasing it for better parallelism.`;
+    msgEl.classList.remove('hidden');
+  } else {
+    msgEl.classList.add('hidden');
+  }
+}
+
+// ─────────────────────────────────────────────
+// MAIN RECALCULATE
+// ─────────────────────────────────────────────
+function recalculate() {
+  warnParallelVsIPs();
+  const scanType    = state.scanType;
+  const mlScaling   = state.mlScaling;
+  const scannerType = document.getElementById('scannerType').value;
+  const memGBs      = parseInt(document.getElementById('vmem').value) || 32;
+  const cpuMhz      = parseInt(document.getElementById('cpuSpeed').value) || 2600;
+  const parallelP   = parseInt(document.getElementById('parallelScans').value) || 30;
+  const cpus        = parseInt(document.getElementById('vcpus').value) || 4;
+  const hasHT       = document.getElementById('hasHT')?.checked ?? false;
+  const targetIPs   = parseInt(document.getElementById('targetIPs').value) || 0;
+  const scanJobs    = parseInt(document.getElementById('scanJobs').value) || 0;
+  const concurrentJobs      = parseInt(document.getElementById('concurrentJobs').value)  || 100;
+  const concurrentWAS       = parseInt(document.getElementById('concurrentWAS')?.value)   || 10;
+  const extScanners         = parseInt(document.getElementById('extScanners')?.value)     || 40;
+  const effectiveConcurrent = scanType === 'WAS' ? concurrentWAS : concurrentJobs;
+  const isPerimeter = scannerType === 'Perimeter';
+
+  const b14 = calcB14(scanType, parallelP);
+  const b15 = calcB15(scanType, parallelP);
+  const capacity = calcCapacity(scannerType, memGBs, cpus, cpuMhz, hasHT);
+  const maxJobs  = calcMaxJobsPerScanner(capacity, mlScaling, b14, b15);
+  const slices   = calcSlices(scanType, targetIPs, mlScaling, b14, b15);
+  let   scanners = calcScannersNeeded(scanType, scanJobs, targetIPs, maxJobs, slices);
+
+  // Apply concurrent constraint: need enough scanners to sustain effective concurrent jobs
+  if (typeof scanners === 'number' && maxJobs > 0) {
+    scanners = Math.max(scanners, Math.ceil(effectiveConcurrent / maxJobs));
+  }
+
+  // Perimeter cap check
+  const capMsgEl = document.getElementById('perimeter-cap-msg');
+  if (isPerimeter && capMsgEl) {
+    if (typeof scanners === 'number' && scanners > extScanners) {
+      capMsgEl.textContent = `⚠ ${scanners} scanners estimated but your subscription limit is ${extScanners} — consider reducing target scope, increasing P, or splitting into multiple scan windows.`;
+      capMsgEl.classList.remove('hidden');
+      scanners = extScanners;
+    } else {
+      capMsgEl.classList.add('hidden');
+    }
+  } else if (capMsgEl) {
+    capMsgEl.classList.add('hidden');
+  }
+
+  // Update primary card
+  const cardEl   = document.getElementById('card-scanners');
+  const resultEl = document.getElementById('result-scanners');
+  const noteEl   = document.getElementById('result-scanners-note');
+
+  const infoEl = document.getElementById('card-scanners-info');
+  if (scanners === 'LOW_CAP') {
+    resultEl.textContent = '⚠';
+    noteEl.textContent   = maxJobs === 0
+      ? 'Scanner capacity too low — try increasing CPU speed or RAM'
+      : 'Too few target IPs for current Parallel Host Scans (P) — reduce P to a value ≤ alive IP count';
+    cardEl.className = cardEl.className.replace(/from-blue-\d+ to-blue-\d+/, 'from-orange-500 to-orange-600');
+    if (infoEl) infoEl.classList.add('hidden');
+    const infoMapWasEl = document.getElementById('card-scanners-info-mapwas');
+    if (infoMapWasEl) infoMapWasEl.classList.add('hidden');
+  } else {
+    resultEl.textContent = scanners;
+    const st = scanType.toLowerCase();
+    const isMapWasSt = st === 'map' || st === 'was';
+    if (isMapWasSt) {
+      noteEl.textContent = `to scan ${scanJobs.toLocaleString()} ${scanType} job${scanJobs !== 1 ? 's' : ''} in parallel`;
+    } else {
+      noteEl.textContent = `to scan ${targetIPs.toLocaleString()} ${scanType} target IP${targetIPs !== 1 ? 's' : ''} in parallel`;
+    }
+    cardEl.className = cardEl.className.replace(/from-orange-\d+ to-orange-\d+/, 'from-blue-900 to-blue-800');
+    const infoMapWasEl = document.getElementById('card-scanners-info-mapwas');
+    if (isMapWasSt) {
+      if (infoEl) infoEl.classList.add('hidden');
+      if (infoMapWasEl) {
+        if (st === 'map') {
+          const mapRounds  = Math.ceil(scanJobs / scanners);
+          const mapDurStr  = formatDuration(mapRounds * 25);
+          infoMapWasEl.innerHTML = `
+            <div class="flex items-center gap-3 mb-3">
+              <div class="text-center">
+                <p class="text-xs text-blue-300 uppercase tracking-wider mb-0.5">Est. Duration</p>
+                <p class="text-2xl font-black text-white">~${mapDurStr}</p>
+                <p class="text-xs text-blue-300">${mapRounds} round${mapRounds !== 1 ? 's' : ''} &times; ~25 min/job</p>
+              </div>
+            </div>
+            <p class="text-blue-100/90 text-sm font-medium leading-relaxed">
+              <span class="font-bold text-white">Each scanner runs one MAP job at a time.</span> The count above reflects running all MAP jobs simultaneously.
+            </p>
+            <ul class="text-blue-100/70 text-xs space-y-1.5 leading-relaxed list-none">
+              <li><span class="text-amber-300 font-semibold">MAP jobs are indivisible.</span> A MAP job covers a full subnet or domain and runs as a single unit — it cannot be split. Plan your batch sizes around the number of subnets/domains to map.</li>
+              <li><span class="text-cyan-300 font-semibold">📅 Batch jobs across scan windows.</span> Rather than running all MAP jobs at once, group them into <span class="text-white font-semibold">2–3 sequential windows</span>. The same smaller scanner pool handles each batch in turn, significantly reducing the total scanners provisioned.</li>
+              <li><span class="text-white font-semibold">Keep your pool uniformly sized</span> (same vCPUs, RAM, and type). Mixed specs create uneven job distribution and unpredictable scan times.</li>
+            </ul>`;
+        } else {
+          const wasRounds  = Math.ceil(scanJobs / scanners);
+          const wasDurStr  = formatDuration(wasRounds * 10);
+          infoMapWasEl.innerHTML = `
+            <div class="flex items-center gap-3 mb-3">
+              <div class="text-center">
+                <p class="text-xs text-blue-300 uppercase tracking-wider mb-0.5">Est. Duration</p>
+                <p class="text-2xl font-black text-white">~${wasDurStr}</p>
+                <p class="text-xs text-blue-300">${wasRounds} round${wasRounds !== 1 ? 's' : ''} &times; ~10 min/job</p>
+              </div>
+            </div>
+            <p class="text-blue-100/90 text-sm font-medium leading-relaxed">
+              <span class="font-bold text-white">Each scanner runs one WAS job at a time.</span> The count above reflects running all WAS jobs simultaneously.
+            </p>
+            <ul class="text-blue-100/70 text-xs space-y-1.5 leading-relaxed list-none">
+              <li><span class="text-cyan-300 font-semibold">📅 Spread jobs across scan windows.</span> Each WAS job scans one web application — group them into <span class="text-white font-semibold">2–3 scheduled windows</span> per day to reuse a smaller scanner pool rather than provisioning for peak parallel load.</li>
+              <li><span class="text-white font-semibold">Keep your pool uniformly sized</span> (same vCPUs, RAM, and type). Mixed specs create uneven job distribution and unpredictable scan times.</li>
+            </ul>`;
+        }
+        infoMapWasEl.classList.remove('hidden');
+      }
+    } else {
+      if (infoEl) infoEl.classList.remove('hidden');
+      if (infoMapWasEl) infoMapWasEl.classList.add('hidden');
+    }
+  }
+
+  // Trade-off table inside hero card (overrides single-number for VM/PC)
+  if (scanners === 'LOW_CAP') {
+    document.getElementById('scanners-single').classList.remove('hidden-field');
+    document.getElementById('scanners-table-wrap').classList.add('hidden-field');
+  }
+
+  // Secondary cards
+  document.getElementById('result-capacity').textContent = capacity.toLocaleString();
+  document.getElementById('result-maxjobs').textContent  = maxJobs === 0 ? '—' : maxJobs.toLocaleString();
+  document.getElementById('result-slices').textContent   = slices === 'N/A' ? 'N/A' : (slices === 0 ? '—' : slices.toLocaleString());
+
+  // Slices don't apply to MAP/WAS (jobs are dispatched one-per-target) — hide those cards.
+  const hideSliceCards = ['map', 'was'].includes(scanType.toLowerCase());
+  document.getElementById('card-maxjobs').classList.toggle('hidden-field', hideSliceCards);
+  document.getElementById('card-slices').classList.toggle('hidden-field', hideSliceCards);
+
+  // Duration & Trade-off table (strategy rows replace the single-number display)
+  updateTradeoffTable(scanType, mlScaling, scannerType, memGBs, cpus, cpuMhz, hasHT, targetIPs, scanJobs, parallelP, scanners, concurrentJobs);
+
+  // Explanation
+  updateExplanation(scanType, scannerType, mlScaling, parallelP, cpus, capacity, maxJobs, slices, scanners, targetIPs, scanJobs);
+
+  // Recommendations
+  updateRecommendations(scanners, scanType, slices, maxJobs);
+
+  // Summary table
+  updateSummary(scanType, scannerType, cpus, memGBs, cpuMhz, parallelP, mlScaling, targetIPs, scanJobs, effectiveConcurrent, isPerimeter);
+
+  // Time Goal Planner
+  const timeGoalHours = getTimeGoalHours();
+  updateTimeGoalCard(scanType, scannerType, mlScaling, targetIPs, timeGoalHours, parallelP, cpus, memGBs, cpuMhz, hasHT);
+
+  // Show panels
+  document.getElementById('summary-panel').classList.remove('hidden-field');
+}
+
+function updateExplanation(scanType, scannerType, mlScaling, parallelP, cpus, capacity, maxJobs, slices, scanners, targetIPs, scanJobs) {
+  const el = document.getElementById('explanation-text');
+  const st = scanType.toLowerCase();
+  const isMapWas = st === 'map' || st === 'was';
+  const scalingDesc = mlScaling === 'ON' ? `(3× = ${parallelP * 3} processes)` : '';
+  let html = `
+    <p>Scanner capacity: <strong>${capacity.toLocaleString()}</strong> units with <strong>${parallelP}</strong> parallel host scans ${scalingDesc}.</p>
+    <p>Each scanner can handle up to <strong>${maxJobs}</strong> parallel scan ${maxJobs === 1 ? 'slice' : 'slices'}.</p>
+  `;
+  if (!isMapWas) {
+    html += `<p><strong>${slices}</strong> scan slices needed to distribute <strong>${targetIPs.toLocaleString()}</strong> IPs across all scanners.</p>`;
+  }
+  html += `<p class="text-xs italic text-gray-400 mt-2">These estimates are based on recommended scan environments, configurations, network topologies, and scan settings. Performance and time estimates may vary based on slow or unresponsive targets, throttled or firewalled network traffic, number of hops, and overall network speed.</p>`;
+  el.innerHTML = html;
+}
+
+function updateRecommendations(scanners, scanType, slices, maxJobs) {
+  const panel = document.getElementById('recommendations-panel');
+  const list  = document.getElementById('recommendations-list');
+  const recs = [];
+  const st = scanType.toLowerCase();
+
+  if (typeof scanners === 'number' && scanners > 10) {
+    recs.push('Consider chunking large scan jobs into smaller jobs instead of relying on slicing. Smaller jobs scan in parallel and avoid large slice pickup wait times.');
+  }
+  if (typeof slices === 'number' && slices > 50) {
+    recs.push('High slice count detected — splitting into multiple scan jobs with fewer IPs each will improve efficiency and scanner utilization.');
+  }
+  if (maxJobs <= 1) {
+    recs.push('Max jobs per scanner is very low — consider increasing CPU speed, vCPUs, or enabling Parallel ML Scaling to improve throughput.');
+  }
+  if (typeof scanners === 'number' && scanners === 1) {
+    recs.push('A single scanner can handle this workload with the current settings.');
+  }
+  recs.push('Capacity alone does not indicate scanner utilization — compare with CPU and memory averages to find patterns based on scan type and target environment.');
+  recs.push('⏱ Time estimates assume standard scan profile settings, recommended scanner sizing, and normal target network conditions — with this as the only active scan on the scanner. A concurrent scan on the same scanner will reduce overall throughput.');
+
+  if (recs.length > 0) {
+    list.innerHTML = recs.map(r => `<li>${r}</li>`).join('');
+    panel.classList.remove('hidden-field');
+  } else {
+    panel.classList.add('hidden-field');
+  }
+}
+
+function updateSummary(scanType, scannerType, cpus, memGBs, cpuMhz, parallelP, mlScaling, targetIPs, scanJobs, concurrentJobs, isPerimeter) {
+  const tbody = document.getElementById('summary-table');
+  const st = scanType.toLowerCase();
+  const isMapWas = st === 'map' || st === 'was';
+  const isPhysical = scannerType.startsWith('Physical');
+
+  const rows = [
+    ['Scan Type', scanType],
+    isMapWas
+      ? [`${scanType} Scan Jobs`, scanJobs.toLocaleString()]
+      : ['Target IPs', targetIPs.toLocaleString()],
+    ['Scanner Type', scannerType],
+  ];
+  if (isPhysical) {
+    const physSpecs = {
+      'Physical-6120-B1': { cpu: 'Intel Xeon® E Hexa-Core (6C / 16T) @ 2.60 GHz', mem: '64 GB DDR4-3200 ECC' },
+      'Physical-6120-A1': { cpu: 'Intel Xeon® E Hexa-Core (6C / 12T) @ 2.90 GHz', mem: '32 GB DDR4-3200 ECC' },
+    };
+    const ps = physSpecs[scannerType];
+    if (ps) {
+      rows.push(['CPU', ps.cpu]);
+      rows.push(['Memory', ps.mem]);
+    }
+  } else {
+    rows.push(['Base CPU Speed', `${cpuMhz.toLocaleString()} MHz`]);
+    rows.push(['vScanner CPUs', cpus]);
+    rows.push(['vScanner Memory', `${memGBs} GB`]);
+  }
+  rows.push(['Parallel Host Scans (P)', parallelP]);
+  if (!isMapWas) rows.push(['Parallel ML Scaling', mlScaling]);
+  rows.push([st === 'was' ? 'Concurrent WAS Scans' : 'Concurrent Scans and Maps', concurrentJobs]);
+
+  tbody.innerHTML = rows.map(([k, v]) =>
+    `<tr class="py-1"><td class="py-2 text-gray-500 pr-4 w-56">${k}</td><td class="py-2 font-medium text-gray-800">${v}</td></tr>`
+  ).join('');
+}
+
+// ─────────────────────────────────────────────
+// UI CONTROLS
+// ─────────────────────────────────────────────
+const SCAN_TYPE_DESCS = {
+  VM:  'Vulnerability Management — scans for open ports, services, and vulnerabilities on each host.',
+  PC:  'Policy Compliance — checks configuration compliance on each target host.',
+  PCI: 'PCI Compliance — deep compliance scan, same capacity model as VM but significantly longer per target (~1 hr/IP).',
+  MAP: 'Network Map — maps a full IP range or domain. One scan job per range.',
+  WAS: 'Web App Scan — one scan job per web application target (~10 min/app).',
+};
+
+function setScanType(type) {
+  state.scanType = type;
+  document.querySelectorAll('.scan-type-btn').forEach(btn => {
+    const active = btn.dataset.type === type;
+    btn.className = `scan-type-btn py-2 rounded-lg text-sm font-semibold border transition ${
+      active
+        ? 'bg-blue-600 border-blue-600 text-white shadow-sm'
+        : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
+    }`;
+  });
+  document.getElementById('scanTypeDesc').textContent = SCAN_TYPE_DESCS[type] || '';
+
+  const isMapWas = type === 'MAP' || type === 'WAS';
+  toggle('field-vmpc-ips',     !isMapWas);
+  toggle('field-mapwas-jobs',   isMapWas);
+  toggle('field-perf-settings', !isMapWas);
+  toggle('field-mlscaling',      !isMapWas);
+  toggle('field-concurrent-jobs', type !== 'WAS');
+  toggle('field-concurrent-was',  type === 'WAS');
+  if (isMapWas) {
+    const hint = document.getElementById('mapwas-jobs-hint');
+    if (hint) hint.textContent = `One ${type} job per target`;
+  }
+  toggle('field-time-goal',     true);
+  recalculate();
+}
+
+function setScaling(val) {
+  state.mlScaling = val;
+  const onBtn  = document.getElementById('btn-scaling-on');
+  const offBtn = document.getElementById('btn-scaling-off');
+  if (val === 'ON') {
+    onBtn.className  = onBtn.className.replace('border-gray-200 text-gray-500 bg-gray-50', 'border-blue-600 text-blue-700 bg-blue-50');
+    offBtn.className = offBtn.className.replace('border-blue-600 text-blue-700 bg-blue-50', 'border-gray-200 text-gray-500 bg-gray-50');
+  } else {
+    offBtn.className = offBtn.className.replace('border-gray-200 text-gray-500 bg-gray-50', 'border-blue-600 text-blue-700 bg-blue-50');
+    onBtn.className  = onBtn.className.replace('border-blue-600 text-blue-700 bg-blue-50', 'border-gray-200 text-gray-500 bg-gray-50');
+  }
+  recalculate();
+}
+
+function updateVmemHint() {
+  const el = document.getElementById('vmem-hint');
+  if (!el) return;
+  const cpus = parseInt(document.getElementById('vcpus')?.value) || 4;
+  const minRam = cpus >= 8 ? '16' : '8';
+  el.innerHTML = `RAM allocated to the virtual scanner — recommended: <strong>${minRam}+ GB</strong> (2–64 GB)`;
+}
+
+function onScannerTypeChange() {
+  const val = document.getElementById('scannerType').value;
+  const isPhysical = val.startsWith('Physical');
+  const isPerimeter = val === 'Perimeter';
+  toggle('virtual-fields',              !isPhysical);
+  toggle('physical-note',                isPhysical);
+  toggle('field-ext-scanners',           isPerimeter);
+  toggle('perimeter-enterprise-note',    isPerimeter);
+  const noteEl = document.getElementById('scannerTypeNote');
+  if (val === 'Physical-6120-A1') noteEl.textContent = 'Fixed capacity: 1,040 units (QGSA-6120-A1, NVX)';
+  else if (val === 'Physical-6120-B1') noteEl.textContent = 'Fixed capacity: 1,245 units (QGSA-6120-B1, NVXE)';
+  else if (isPerimeter) noteEl.textContent = 'Virtual Perimeter scanner — defaults set to 8 vCPUs / 16 GB RAM / P=15';
+  else noteEl.textContent = 'Internal virtual/container scanner — 40% virtual penalty applied, on top of 40% Hyperthreading/SMT penalty when HT is enabled';
+
+  // Physical appliance hardware specs (per Qualys physical scanner docs)
+  const physSpecs = {
+    'Physical-6120-B1': { model: 'QGSA-6120-B1 (NVXE)', cap: '1,245', cpu: 'Intel Xeon® E Hexa-Core (6C / 16T) @ 2.60 GHz, 16M cache', mem: '64 GB DDR4-3200 ECC (up to 128 GB)' },
+    'Physical-6120-A1': { model: 'QGSA-6120-A1 (NVX)',  cap: '1,040', cpu: 'Intel Xeon® E Hexa-Core (6C / 12T) @ 2.90 GHz, 12M cache', mem: '32 GB DDR4-3200 ECC (up to 128 GB)' },
+  };
+  const physNote = document.getElementById('physical-note');
+  if (isPhysical && physNote && physSpecs[val]) {
+    const s = physSpecs[val];
+    physNote.innerHTML =
+      `<p class="font-semibold text-gray-700 mb-2">${s.model} — fixed appliance specs</p>` +
+      `<dl class="space-y-1">` +
+      `<div class="flex justify-between gap-3"><dt class="text-gray-500">CPU</dt><dd class="font-medium text-gray-800 text-right">${s.cpu}</dd></div>` +
+      `<div class="flex justify-between gap-3"><dt class="text-gray-500">Memory</dt><dd class="font-medium text-gray-800 text-right">${s.mem}</dd></div>` +
+      `<div class="flex justify-between gap-3"><dt class="text-gray-500">Scanning capacity</dt><dd class="font-medium text-gray-800 text-right">${s.cap} units</dd></div>` +
+      `</dl>` +
+      `<p class="text-gray-400 mt-2">These are fixed hardware resources — the CPU and RAM inputs above do not apply.</p>`;
+  }
+
+  const vcpuHint = document.getElementById('vcpu-hint');
+  if (isPerimeter) {
+    document.getElementById('vcpus').value    = 8;  document.getElementById('vcpuVal').value  = 8;
+    document.getElementById('vmem').value     = 16; document.getElementById('vmemVal').value  = 16;
+    document.getElementById('parallelScans').value = 15; document.getElementById('parallelVal').value = 15;
+    if (vcpuHint) vcpuHint.innerHTML = 'Virtual CPUs allocated to the scanner — recommended: <strong>8+</strong> (1–32)';
+    updateVmemHint();
+  } else if (!isPhysical) {
+    document.getElementById('vcpus').value    = 4;  document.getElementById('vcpuVal').value  = 4;
+    document.getElementById('vmem').value     = 8;  document.getElementById('vmemVal').value  = 8;
+    document.getElementById('parallelScans').value = 30; document.getElementById('parallelVal').value = 30;
+    if (vcpuHint) vcpuHint.innerHTML = 'Virtual CPUs allocated to the scanner — recommended: <strong>4+</strong> (1–32)';
+    updateVmemHint();
+  } else {
+    document.getElementById('parallelScans').value = 30; document.getElementById('parallelVal').value = 30;
+  }
+  // Update CPU:RAM sizing reference table
+  const sizingCard  = document.getElementById('sizing-ref-card');
+  const sizingTbody = document.getElementById('sizing-ref-tbody');
+  const sizingNote  = document.getElementById('sizing-ref-note');
+  if (isPhysical) {
+    if (sizingCard) sizingCard.classList.add('hidden-field');
+  } else {
+    if (sizingCard) sizingCard.classList.remove('hidden-field');
+    if (sizingTbody) {
+      if (isPerimeter) {
+        sizingTbody.innerHTML = [
+          `<tr><td class="py-1">Standard</td><td class="text-center font-semibold">8</td><td class="text-center font-semibold">16 GB</td><td class="text-center">1:2</td></tr>`,
+          `<tr><td class="py-1">Performance</td><td class="text-center font-semibold">8</td><td class="text-center font-semibold">32 GB</td><td class="text-center">1:4</td></tr>`,
+          `<tr><td class="py-1">High-load</td><td class="text-center font-semibold">16</td><td class="text-center font-semibold">32 GB</td><td class="text-center">1:2</td></tr>`,
+        ].join('');
+        if (sizingNote) sizingNote.innerHTML = 'Minimum <strong>8 vCPU</strong> for Perimeter. High-traffic environments: 16 vCPU / 32 GB.';
+      } else {
+        sizingTbody.innerHTML = [
+          `<tr><td class="py-1">Min stable</td><td class="text-center">2</td><td class="text-center">4 GB</td><td class="text-center">1:2</td></tr>`,
+          `<tr><td class="py-1">Small / Medium</td><td class="text-center font-semibold">4</td><td class="text-center font-semibold">8 GB</td><td class="text-center">1:2</td></tr>`,
+          `<tr><td class="py-1">Enterprise</td><td class="text-center font-semibold">8 and above</td><td class="text-center font-semibold">16 GB and above</td><td class="text-center">1:2</td></tr>`,
+        ].join('');
+        if (sizingNote) sizingNote.innerHTML = 'Ideal ratio: <strong>1:2 or 1:3</strong> (vCPU:GB). Max: 1:4.';
+      }
+    }
+  }
+  recalculate();
+}
+
+function toggle(id, show) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (show) el.classList.remove('hidden-field');
+  else el.classList.add('hidden-field');
+}
+
+// ─────────────────────────────────────────────
+// CSV EXPORT
+// ─────────────────────────────────────────────
+function csvEscape(val) {
+  if (val === null || val === undefined) return '';
+  const s = String(val);
+  if (/[",\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+  return s;
+}
+function csvRow(arr) { return arr.map(csvEscape).join(',') + '\n'; }
+
+function downloadCSV() {
+  const scanType    = state.scanType;
+  const mlScaling   = state.mlScaling;
+  const scannerType = document.getElementById('scannerType').value;
+  const memGBs      = parseInt(document.getElementById('vmem').value) || 8;
+  const cpuMhz      = parseInt(document.getElementById('cpuSpeed').value) || 2600;
+  const parallelP   = parseInt(document.getElementById('parallelScans').value) || 30;
+  const cpus        = parseInt(document.getElementById('vcpus').value) || 4;
+  const hasHT       = document.getElementById('hasHT')?.checked ?? false;
+  const targetIPs      = parseInt(document.getElementById('targetIPs').value) || 0;
+  const scanJobs       = parseInt(document.getElementById('scanJobs').value) || 0;
+  const concurrentJobs = parseInt(document.getElementById('concurrentJobs')?.value) || 100;
+  const concurrentWAS  = parseInt(document.getElementById('concurrentWAS')?.value)  || 10;
+
+  const b14 = calcB14(scanType, parallelP);
+  const b15 = calcB15(scanType, parallelP);
+  const capacity = calcCapacity(scannerType, memGBs, cpus, cpuMhz, hasHT);
+  const maxJobs  = calcMaxJobsPerScanner(capacity, mlScaling, b14, b15);
+  const slices   = calcSlices(scanType, targetIPs, mlScaling, b14, b15);
+  const scanners = calcScannersNeeded(scanType, scanJobs, targetIPs, maxJobs, slices);
+  const st = scanType.toLowerCase();
+  const isMapWas = st === 'map' || st === 'was';
+  const isPhysical = scannerType.startsWith('Physical');
+
+  let csv = '';
+  csv += csvRow(['Qualys Scanner Count & Capacity Calculator']);
+  csv += csvRow(['Generated', new Date().toLocaleString()]);
+  csv += csvRow([]);
+
+  // Inputs
+  csv += csvRow(['INPUTS']);
+  csv += csvRow(['Field', 'Value', 'Notes']);
+  csv += csvRow(['Scan Type', scanType, 'VM / PC / PCI / MAP / WAS']);
+  if (isMapWas) {
+    csv += csvRow([`Number of ${scanType} Scan Jobs`, scanJobs, `One job per ${scanType} target`]);
+  } else {
+    csv += csvRow(['Number of Alive Target IPs', targetIPs, 'Live hosts (VM / PC / PCI)']);
+  }
+  csv += csvRow(['Scanner Type', scannerType, '']);
+  if (!isPhysical) {
+    csv += csvRow(['Base CPU Speed (MHz)', cpuMhz, '']);
+    csv += csvRow(['vScanner CPUs', cpus, '1–32']);
+    csv += csvRow(['vScanner Memory (GB)', memGBs, '2–64 GB']);
+    csv += csvRow(['Hyperthreading (HT)', hasHT ? 'ON' : 'OFF', '']);
+  }
+  csv += csvRow(['Parallel Host Scans (P)', parallelP, 'Set in Scan Performance settings in your Option Profile']);
+  if (!isMapWas) {
+    csv += csvRow(['Parallel ML Scaling', mlScaling, 'ON = 3× parallelism']);
+  }
+  if (st === 'was') {
+    csv += csvRow(['Concurrent WAS Scans', concurrentWAS, 'backoffice setting']);
+  } else {
+    csv += csvRow(['Concurrent Scans and Maps', concurrentJobs, 'backoffice setting — caps jobs/slices per scanner']);
+  }
+  csv += csvRow([]);
+
+  // Outputs
+  csv += csvRow(['ESTIMATED OUTPUTS']);
+  csv += csvRow(['Metric', 'Value', 'Description']);
+  csv += csvRow(['Total Scanner Capacity', capacity, 'Capacity units when idle']);
+  csv += csvRow(['Max Slices in Parallel per Scanner', maxJobs === 0 ? 'N/A' : maxJobs, '1 slice per job at a time']);
+  csv += csvRow(['Total Slices', slices === 'N/A' ? 'N/A' : slices, 'Slices to cover all target IPs']);
+  csv += csvRow(['Scanners Needed (Fastest)', scanners === 'LOW_CAP' ? 'Capacity Too Low' : scanners, 'Single-round completion']);
+  csv += csvRow([]);
+
+  // Trade-off strategies (VM/PC only)
+  if (!isMapWas && typeof scanners === 'number' && scanners >= 1 && typeof slices === 'number' && slices > 0 && maxJobs > 0) {
+    csv += csvRow(['SCANNER POOL TRADE-OFF']);
+    csv += csvRow(['Strategy', 'Scanners (max parallel)', 'Jobs to Create', 'Slices/Burst', 'Bursts', 'Est. Duration']);
+    const strategies = [
+      { k: scanners,                                label: 'Fastest (speed first)' },
+      { k: Math.max(1, Math.round(scanners * 0.75)), label: 'Balanced (good middle ground)' },
+      { k: Math.max(1, Math.round(scanners * 0.5)),  label: 'Economical (fewer scanners)' },
+      { k: Math.max(1, Math.round(scanners * 0.25)), label: 'Minimal pool (lowest footprint)' },
+    ];
+    const seen = new Set();
+    const minPR = st === 'pci' ? 60 : 5;
+    const maxPR = st === 'pci' ? 120 : 10;
+    strategies.filter(s => { if (seen.has(s.k)) return false; seen.add(s.k); return true; })
+      .forEach(({ k, label }) => {
+        const rounds = Math.ceil(slices / (k * maxJobs));
+        const minJobs = Math.min(maxJobs, Math.max(1, Math.ceil(slices / (k * rounds))));
+        const slicesPerRound = k * minJobs;
+        csv += csvRow([label, k, minJobs, slicesPerRound, rounds, `${rounds * minPR}–${rounds * maxPR} min`]);
+      });
+    csv += csvRow([]);
+  }
+
+  // Time Goal Planner sections (VM/PC only, when inputs set)
+  const csvTimeGoal   = getTimeGoalHours();
+  const csvObsMins    = state.scanType === 'PCI' ? 60 : (state.scanType === 'MAP' ? 25 : (state.scanType === 'WAS' ? 10 : 7.5));
+  const csvPoolSize   = parseInt(document.getElementById('poolSizeInput')?.value)       || 0;
+  const planPresets   = [
+    { label: 'Minimal',     cpus: 2, mem: 4  },
+    { label: 'Small',       cpus: 4, mem: 8  },
+    { label: 'Medium',      cpus: 4, mem: 16 },
+    { label: 'Large',       cpus: 8, mem: 16 },
+    { label: 'XL',          cpus: 8, mem: 32 },
+    { label: 'Your Config', cpus, mem: memGBs, custom: true },
+  ];
+
+  function csvFmtDur(mins) {
+    if (!mins) return '—';
+    const h = Math.floor(mins / 60), m = Math.round(mins % 60);
+    return h > 0 ? (m > 0 ? `${h} hr ${m} min` : `${h} hr`) : `${m} min`;
+  }
+
+  if (!isMapWas && targetIPs > 0 && csvTimeGoal > 0 && typeof slices === 'number' && slices > 0) {
+    const maxRounds = Math.floor((csvTimeGoal * 60) / csvObsMins);
+    if (maxRounds >= 1) {
+      const minThroughput = Math.ceil(slices / maxRounds);
+      csv += csvRow(['SCAN TIME PLANNER']);
+      csv += csvRow([`Goal: ${scanType}-scan ${targetIPs.toLocaleString()} IPs within ${csvTimeGoal}h at P=${parallelP}`]);
+      csv += csvRow(['Spec', 'vCPU', 'RAM (GB)', 'Internal Scanner Count', 'External/Perimeter Count']);
+      planPresets.forEach(p => {
+        const hz = p.custom ? cpuMhz : 2600, ht = p.custom ? hasHT : false;
+        const capI = calcCapacity('Virtual-or-Container-Internal', p.mem, p.cpus, hz, ht);
+        const capE = calcCapacity('Perimeter', p.mem, p.cpus, hz, ht);
+        const mjI  = calcMaxJobsPerScanner(capI, mlScaling, b14, b15);
+        const mjE  = calcMaxJobsPerScanner(capE, mlScaling, b14, b15);
+        csv += csvRow([p.label, p.cpus, p.mem,
+          mjI > 0 ? Math.ceil(minThroughput / mjI) : 'N/A',
+          mjE > 0 ? Math.ceil(minThroughput / mjE) : 'N/A']);
+      });
+      csv += csvRow(['Note', `Counts assume ~${csvObsMins} min/round average. Preset rows: 2600 MHz, HT off.`]);
+      csv += csvRow([]);
+    }
+  }
+
+  if (!isMapWas && targetIPs > 0 && csvObsMins > 0 && csvPoolSize > 0 && typeof slices === 'number' && slices > 0) {
+    const isPerim   = scannerType === 'Perimeter';
+    const capKey    = scannerType;
+    const typeLabel = isPerim ? 'External/Perimeter scanner' : 'Internal scanner';
+    const curCap   = calcCapacity(capKey, memGBs, cpus, cpuMhz, hasHT);
+    const curMj    = calcMaxJobsPerScanner(curCap, mlScaling, b14, b15);
+    const curRounds = curMj > 0 ? Math.ceil(slices / (csvPoolSize * curMj)) : null;
+    const curTotalMins = curRounds ? curRounds * csvObsMins : null;
+
+    function pctVsCur(mins) {
+      if (!mins || !curTotalMins) return '—';
+      return `${((mins - curTotalMins) / curTotalMins * 100).toFixed(1)}%`;
+    }
+
+    csv += csvRow(['SPEC UPGRADE IMPACT']);
+    csv += csvRow([`${typeLabel} — ${csvPoolSize} scanner${csvPoolSize !== 1 ? 's' : ''}, ${csvObsMins} min/round observed, ${slices} total slices`]);
+    csv += csvRow(['Spec', 'vCPU', 'RAM (GB)', 'Max Jobs/Scanner', 'Rounds', 'Est. Duration', 'vs Your Config']);
+    planPresets.slice(0, 5).forEach(p => {
+      const cap  = calcCapacity(capKey, p.mem, p.cpus, 2600, false);
+      const mj   = calcMaxJobsPerScanner(cap, mlScaling, b14, b15);
+      const rds  = mj > 0 ? Math.ceil(slices / (csvPoolSize * mj)) : null;
+      const mins = rds ? rds * csvObsMins : null;
+      csv += csvRow([p.label, p.cpus, p.mem, mj || '—', rds || '—', csvFmtDur(mins), pctVsCur(mins)]);
+    });
+    csv += csvRow(['Your Config', cpus, memGBs, curMj || '—', curRounds || '—', csvFmtDur(curTotalMins), 'baseline']);
+    csv += csvRow([]);
+
+    csv += csvRow(['POOL SIZE IMPACT']);
+    csv += csvRow([`Spec: ${cpus}vCPU / ${memGBs} GB${hasHT ? ' / HT' : ''} — ${curMj || 0} max jobs/scanner`]);
+    csv += csvRow(['Scanner Count', 'Rounds', 'Est. Duration', 'vs Current Pool']);
+    const poolMax = Math.min(Math.max(csvPoolSize * 2, 5), 20);
+    for (let p = 1; p <= poolMax; p++) {
+      const rds  = curMj > 0 ? Math.ceil(slices / (p * curMj)) : null;
+      const mins = rds ? rds * csvObsMins : null;
+      const vs   = p === csvPoolSize ? 'baseline' : pctVsCur(mins);
+      csv += csvRow([p === csvPoolSize ? `${p} (current)` : p, rds || '—', csvFmtDur(mins), vs]);
+    }
+    csv += csvRow([]);
+  }
+
+  csv += csvRow(['DISCLAIMER']);
+  csv += csvRow(['Ballpark estimates based on standard scan profile settings, recommended scanner sizing, and normal target network conditions — assuming this is the only scan running on the scanner. A concurrent scan on the same scanner will reduce throughput. Actual results also vary by: scan preferences, port lists, QID count, network topology, and environment settings.']);
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Scanner-Capacity-Report-${scanType}-${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ─────────────────────────────────────────────
+// XLSX EXPORT
+// ─────────────────────────────────────────────
+function downloadXLSX() {
+  const scanType    = state.scanType;
+  const mlScaling   = state.mlScaling;
+  const scannerType = document.getElementById('scannerType').value;
+  const memGBs      = parseInt(document.getElementById('vmem').value) || 8;
+  const cpuMhz      = parseInt(document.getElementById('cpuSpeed').value) || 2600;
+  const parallelP   = parseInt(document.getElementById('parallelScans').value) || 30;
+  const cpus        = parseInt(document.getElementById('vcpus').value) || 4;
+  const hasHT          = document.getElementById('hasHT')?.checked ?? false;
+  const targetIPs      = parseInt(document.getElementById('targetIPs').value) || 0;
+  const scanJobs       = parseInt(document.getElementById('scanJobs').value) || 0;
+  const concurrentJobs = parseInt(document.getElementById('concurrentJobs')?.value) || 100;
+  const concurrentWAS  = parseInt(document.getElementById('concurrentWAS')?.value)  || 10;
+
+  const b14 = calcB14(scanType, parallelP);
+  const b15 = calcB15(scanType, parallelP);
+  const capacity = calcCapacity(scannerType, memGBs, cpus, cpuMhz, hasHT);
+  const maxJobs  = calcMaxJobsPerScanner(capacity, mlScaling, b14, b15);
+  const slices   = calcSlices(scanType, targetIPs, mlScaling, b14, b15);
+  const scanners = calcScannersNeeded(scanType, scanJobs, targetIPs, maxJobs, slices);
+  const st = scanType.toLowerCase();
+  const isMapWas = st === 'map' || st === 'was';
+  const isPhysical = scannerType.startsWith('Physical');
+
+  const wb = XLSX.utils.book_new();
+
+  // ── Sheet 1: Report ──
+  const reportData = [
+    ['QUALYS SCANNER COUNT & CAPACITY CALCULATOR', '', ''],
+    ['', '', ''],
+    ['INPUTS', '', ''],
+    ['Field', 'Value', 'Notes'],
+    ['Scan Type', scanType, 'VM / PC / PCI / MAP / WAS'],
+  ];
+  if (isMapWas) {
+    reportData.push([`Number of ${scanType} Scan Jobs`, scanJobs, `One job per ${scanType} target`]);
+  } else {
+    reportData.push(['Number of Alive Target IPs', targetIPs, 'Count of live hosts (VM / PC / PCI)']);
+  }
+  reportData.push(['Scanner Type', scannerType, '']);
+  if (!isPhysical) {
+    reportData.push(['Base CPU Speed (MHz)', cpuMhz, '']);
+    reportData.push(['vScanner CPUs', cpus, '1–32']);
+    reportData.push(['vScanner Memory (GBs)', memGBs, '2–64 GB']);
+    reportData.push(['Hyperthreading (HT)', hasHT ? 'ON' : 'OFF', '']);
+  }
+  reportData.push(['Parallel Host Scans per Scanner per Slice (P)', parallelP, '1–50; set in Scan Performance settings in your Option Profile']);
+  if (!isMapWas) {
+    reportData.push(['Parallel ML Scaling', mlScaling, 'ON = 3× parallelism']);
+  }
+  if (st === 'was') {
+    reportData.push(['Concurrent WAS Scans', concurrentWAS, 'backoffice setting']);
+  } else {
+    reportData.push(['Concurrent Scans and Maps', concurrentJobs, 'backoffice setting — caps jobs/slices per scanner']);
+  }
+  reportData.push(['', '', '']);
+  reportData.push(['ESTIMATED OUTPUTS', '', '']);
+  reportData.push(['Metric', 'Value', 'Description']);
+  reportData.push(['Total Scanner Capacity', capacity, 'Capacity units when idle']);
+  reportData.push(['Max Slices in Parallel per Scanner', maxJobs === 0 ? 'N/A' : maxJobs, 'Max simultaneous jobs (1 slice per job at a time)']);
+  reportData.push(['Total Slices', slices === 'N/A' ? 'N/A' : slices, 'Slices needed to cover all target IPs']);
+  reportData.push(['Scanners Needed', scanners === 'LOW_CAP' ? 'Capacity Too Low' : scanners, 'Primary estimate']);
+  reportData.push(['', '', '']);
+  reportData.push(['DISCLAIMER', '', '']);
+  reportData.push([
+    'Ballpark estimates based on standard scan profile settings, recommended scanner sizing, and normal target network conditions — assuming this is the only scan running on the scanner. A concurrent scan on the same scanner will reduce throughput. Actual results also vary by: scan preferences, port lists, QID count, network topology, and environment settings.',
+    '', ''
+  ]);
+  reportData.push(['Generated by Qualys Scanner Count & Capacity Calculator', new Date().toLocaleString(), '']);
+
+  const ws = XLSX.utils.aoa_to_sheet(reportData);
+  ws['!cols'] = [{ wch: 45 }, { wch: 20 }, { wch: 55 }];
+  XLSX.utils.book_append_sheet(wb, ws, 'Capacity Report');
+
+  // ── Sheet 2: Time Planner (VM/PC only, when any planner input is set) ──
+  const xlTimeGoal  = getTimeGoalHours();
+  const xlObsMins   = state.scanType === 'PCI' ? 60 : (state.scanType === 'MAP' ? 25 : (state.scanType === 'WAS' ? 10 : 7.5));
+  const xlPoolSize  = parseInt(document.getElementById('poolSizeInput')?.value)        || 0;
+
+  if (!isMapWas && targetIPs > 0 && (xlTimeGoal > 0 || xlPoolSize > 0) && typeof slices === 'number' && slices > 0) {
+    const xlData = [
+      ['QUALYS SCAN TIME PLANNER', '', '', '', '', '', ''],
+      ['', '', '', '', '', '', ''],
+    ];
+
+    const xlPresets = [
+      { label: 'Minimal',     cpus: 2, mem: 4  },
+      { label: 'Small',       cpus: 4, mem: 8  },
+      { label: 'Medium',      cpus: 4, mem: 16 },
+      { label: 'Large',       cpus: 8, mem: 16 },
+      { label: 'XL',          cpus: 8, mem: 32 },
+    ];
+
+    function xlFmtDur(mins) {
+      if (!mins) return '—';
+      const h = Math.floor(mins / 60), m = Math.round(mins % 60);
+      return h > 0 ? (m > 0 ? `${h} hr ${m} min` : `${h} hr`) : `${m} min`;
+    }
+
+    // Section A: Scanner Count to Meet Time Goal
+    if (xlTimeGoal > 0) {
+      const maxRounds = Math.floor((xlTimeGoal * 60) / xlObsMins);
+      if (maxRounds >= 1) {
+        const minTP = Math.ceil(slices / maxRounds);
+        xlData.push([`SCANNER COUNT TO MEET TIME GOAL`, '', '', '', '', '', '']);
+        xlData.push([`Goal: ${scanType}-scan ${targetIPs.toLocaleString()} IPs within ${xlTimeGoal}h at P=${parallelP}`, '', '', '', '', '', '']);
+        xlData.push(['Spec', 'vCPU', 'RAM (GB)', 'Internal Scanner Count', 'External/Perimeter Count', '', '']);
+        xlPresets.forEach(p => {
+          const capI = calcCapacity('Virtual-or-Container-Internal', p.mem, p.cpus, 2600, false);
+          const capE = calcCapacity('Perimeter', p.mem, p.cpus, 2600, false);
+          const mjI  = calcMaxJobsPerScanner(capI, mlScaling, b14, b15);
+          const mjE  = calcMaxJobsPerScanner(capE, mlScaling, b14, b15);
+          xlData.push([p.label, p.cpus, p.mem,
+            mjI > 0 ? Math.ceil(minTP / mjI) : 'N/A',
+            mjE > 0 ? Math.ceil(minTP / mjE) : 'N/A', '', '']);
+        });
+        const ycI = calcMaxJobsPerScanner(calcCapacity('Virtual-or-Container-Internal', memGBs, cpus, cpuMhz, hasHT), mlScaling, b14, b15);
+        const ycE = calcMaxJobsPerScanner(calcCapacity('Perimeter', memGBs, cpus, cpuMhz, hasHT), mlScaling, b14, b15);
+        xlData.push([`Your Config (${cpus}vCPU/${memGBs}GB${hasHT ? '/HT' : ''})`, cpus, memGBs,
+          ycI > 0 ? Math.ceil(minTP / ycI) : 'N/A',
+          ycE > 0 ? Math.ceil(minTP / ycE) : 'N/A', '', '']);
+        xlData.push([`Note: assumes ~${xlObsMins} min/round average. Preset rows: 2600 MHz, HT off.`, '', '', '', '', '', '']);
+        xlData.push(['', '', '', '', '', '', '']);
+      }
+    }
+
+    // Section B: Spec Upgrade Impact + Pool Size Impact
+    if (xlPoolSize > 0) {
+      const isPerim   = scannerType === 'Perimeter';
+      const capKey    = scannerType;
+      const typeLabel = isPerim ? 'External/Perimeter scanner' : 'Internal scanner';
+      const curCap    = calcCapacity(capKey, memGBs, cpus, cpuMhz, hasHT);
+      const curMj     = calcMaxJobsPerScanner(curCap, mlScaling, b14, b15);
+      const curRounds = curMj > 0 ? Math.ceil(slices / (xlPoolSize * curMj)) : null;
+      const curTotMins = curRounds ? curRounds * xlObsMins : null;
+
+      function xlPct(mins) {
+        if (!mins || !curTotMins) return '—';
+        return `${((mins - curTotMins) / curTotMins * 100).toFixed(1)}%`;
+      }
+
+      xlData.push(['SPEC UPGRADE IMPACT', '', '', '', '', '', '']);
+      xlData.push([`${typeLabel} — ${xlPoolSize} scanner${xlPoolSize !== 1 ? 's' : ''}, ${xlObsMins} min/round, ${slices} total slices`, '', '', '', '', '', '']);
+      xlData.push(['Spec', 'vCPU', 'RAM (GB)', 'Max Jobs/Scanner', 'Rounds', 'Est. Duration', 'vs Your Config']);
+      xlPresets.forEach(p => {
+        const cap  = calcCapacity(capKey, p.mem, p.cpus, 2600, false);
+        const mj   = calcMaxJobsPerScanner(cap, mlScaling, b14, b15);
+        const rds  = mj > 0 ? Math.ceil(slices / (xlPoolSize * mj)) : null;
+        const mins = rds ? rds * xlObsMins : null;
+        xlData.push([p.label, p.cpus, p.mem, mj || '—', rds || '—', xlFmtDur(mins), xlPct(mins)]);
+      });
+      xlData.push([`Your Config`, cpus, memGBs, curMj || '—', curRounds || '—', xlFmtDur(curTotMins), 'baseline']);
+      xlData.push(['', '', '', '', '', '', '']);
+
+      xlData.push(['POOL SIZE IMPACT', '', '', '', '', '', '']);
+      xlData.push([`Spec: ${cpus}vCPU / ${memGBs} GB${hasHT ? ' / HT' : ''} — ${curMj || 0} max jobs/scanner`, '', '', '', '', '', '']);
+      xlData.push(['Scanner Count', 'Rounds', 'Est. Duration', 'vs Current Pool', '', '', '']);
+      const xlPoolMax = Math.min(Math.max(xlPoolSize * 2, 5), 20);
+      for (let p = 1; p <= xlPoolMax; p++) {
+        const rds  = curMj > 0 ? Math.ceil(slices / (p * curMj)) : null;
+        const mins = rds ? rds * xlObsMins : null;
+        xlData.push([
+          p === xlPoolSize ? `${p} (current)` : p,
+          rds || '—', xlFmtDur(mins),
+          p === xlPoolSize ? 'baseline' : xlPct(mins), '', '', '']);
+      }
+      xlData.push(['', '', '', '', '', '', '']);
+    }
+
+    xlData.push(['Ballpark estimates only. Per-round time is environment-dependent.', '', '', '', '', '', '']);
+    xlData.push(['Generated', new Date().toLocaleString(), '', '', '', '', '']);
+
+    const ws2 = XLSX.utils.aoa_to_sheet(xlData);
+    ws2['!cols'] = [{ wch: 42 }, { wch: 8 }, { wch: 10 }, { wch: 18 }, { wch: 10 }, { wch: 18 }, { wch: 16 }];
+    XLSX.utils.book_append_sheet(wb, ws2, 'Time Planner');
+  }
+
+  XLSX.writeFile(wb, `Scanner-Capacity-Report-${scanType}-${new Date().toISOString().slice(0,10)}.xlsx`);
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  setScanType('VM');
+  setScaling('OFF');
+  onScannerTypeChange();
+  recalculate();
+});
+</script>
+</body>
+</html>
